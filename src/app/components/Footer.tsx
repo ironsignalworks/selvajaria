@@ -201,6 +201,19 @@ export default function Footer({ onNavigate }: FooterProps) {
           </p>
           
           <div className="flex flex-wrap gap-4 md:gap-6">
+            <a
+              href="https://ironsignalworks.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="uppercase text-[#769a75] hover:text-[#00FF5A] transition-colors"
+              style={{
+                fontSize: '0.65rem',
+                fontWeight: 600,
+                letterSpacing: '0.1em',
+              }}
+            >
+              Site by Iron Signal Works
+            </a>
             <button
               onClick={() => onNavigate('privacy')}
               className="uppercase text-[#769a75] hover:text-[#00FF5A] transition-colors"
