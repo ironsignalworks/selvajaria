@@ -1,0 +1,21 @@
+{
+  "name": "Selvajaria Records",
+  "short_name": "Selvajaria",
+  "description": "Independent underground label and distro.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#131e13",
+  "theme_color": "#131e13",
+  "icons": [
+    {
+      "src": "logo1.png",
+      "sizes": "1063x505",
+      "type": "image/png"
+    },
+    {
+      "src": "logo1.png",
+      "sizes": "1063x505",
+      "type": "image/png"
+    }
+  ]
+}

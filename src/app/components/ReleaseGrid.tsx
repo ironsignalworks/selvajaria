@@ -662,6 +662,9 @@ export default function ReleaseGrid({ sortBy, onAddToCart }: ReleaseGridProps) {
         <div
           className="fixed inset-0 z-[90] flex items-center justify-center bg-[#050805]/90 p-4"
           onClick={() => setPreviewRelease(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Release cover preview"
         >
           <div
             className="relative w-full max-w-4xl border border-[#00FF5A]/60 bg-[#101910] p-4"
@@ -701,6 +704,9 @@ export default function ReleaseGrid({ sortBy, onAddToCart }: ReleaseGridProps) {
         <div
           className="fixed inset-0 z-[95] flex items-center justify-center bg-[#050805]/92 p-4"
           onClick={() => setDetailModalRelease(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Release details for ${detailModalRelease.artist} ${detailModalRelease.title}`}
         >
           <div
             className="w-full max-h-[90vh] max-w-3xl overflow-y-auto border border-[#00FF5A]/60 bg-[#101910] p-4 sm:p-6"

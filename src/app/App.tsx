@@ -60,6 +60,12 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-[#131e13] focus:px-4 focus:py-2 focus:text-[#f4fbf3] focus:outline focus:outline-2 focus:outline-[#00FF5A]"
+      >
+        Skip to main content
+      </a>
       <div
         className="fixed inset-0 -z-10 bg-cover bg-center"
         style={{
@@ -73,12 +79,15 @@ export default function App() {
         <>
           <Hero onEnterStore={() => navigateTo('distro')} />
 
-          <main id="releases-catalog" className="container mx-auto px-4 py-8 sm:py-12">
+          <main id="main-content" className="container mx-auto px-4 py-8 sm:py-12">
+            <h1 className="sr-only">Selvajaria Records catalog</h1>
             <div className="mb-4 lg:hidden">
               <button
                 onClick={() => setMobileFiltersOpen((prev) => !prev)}
                 className="border border-[#00FF5A]/70 px-4 py-2 text-[#00FF5A] uppercase hover:bg-[#00FF5A] hover:text-[#131e13]"
                 style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em' }}
+                aria-expanded={mobileFiltersOpen}
+                aria-controls="catalog-filters"
               >
                 {mobileFiltersOpen ? 'Hide Filters' : 'Show Filters'}
               </button>
@@ -95,7 +104,7 @@ export default function App() {
             </div>
 
             <div className="flex flex-col gap-8 lg:flex-row">
-              <div className={`${mobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
+              <div id="catalog-filters" className={`${mobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
                 <FilterSidebar />
               </div>
 
@@ -125,7 +134,11 @@ export default function App() {
                       Showing 31 releases
                     </span>
 
+                    <label htmlFor="release-sort" className="sr-only">Sort releases</label>
                     <select
+                      id="release-sort"
+                      name="release-sort"
+                      aria-label="Sort releases"
                       value={releaseSort}
                       onChange={(event) => setReleaseSort(event.target.value as ReleaseSort)}
                       className="bg-[#101910b3] border border-[#769a75] text-[#f4fbf3] px-4 py-2 uppercase cursor-pointer hover:border-[#00FF5A] focus:border-[#00FF5A] focus:outline-none transition-colors"

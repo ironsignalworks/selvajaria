@@ -26,13 +26,15 @@ export default function Navigation({ activePage, onNavigate, cartCount }: Naviga
   ];
 
   return (
-    <nav className="bg-[#131e13] border-b border-[#769a75]/30 sticky top-0 z-50">
+    <nav className="bg-[#131e13] border-b border-[#769a75]/30 sticky top-0 z-50" aria-label="Primary">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between gap-3 py-3">
           <button
             onClick={() => setMobileOpen((prev) => !prev)}
             className="md:hidden text-[#f4fbf3] hover:text-[#00FF5A] transition-colors"
             aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-primary-nav"
           >
             {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -42,6 +44,7 @@ export default function Navigation({ activePage, onNavigate, cartCount }: Naviga
               <li key={item.label}>
                 <button
                   onClick={() => onNavigate(item.page)}
+                  aria-current={activePage === item.page ? 'page' : undefined}
                   className={`
                     uppercase tracking-wider flex items-center gap-1 py-2 px-3 transition-all
                     ${activePage === item.page
@@ -64,7 +67,8 @@ export default function Navigation({ activePage, onNavigate, cartCount }: Naviga
           <button
             onClick={() => onNavigate('cart')}
             className={`transition-colors relative ${activePage === 'cart' ? 'text-[#00FF5A]' : 'text-[#f4fbf3] hover:text-[#00FF5A]'}`}
-            aria-label="Open shopping cart"
+            aria-label={`Open shopping cart, ${cartCount} item${cartCount === 1 ? '' : 's'}`}
+            aria-current={activePage === 'cart' ? 'page' : undefined}
           >
             <ShoppingCart className="w-6 h-6" />
             <span className="absolute -top-2 -right-2 bg-[#00FF5A] text-[#131e13] rounded-full w-5 h-5 flex items-center justify-center"
@@ -75,7 +79,7 @@ export default function Navigation({ activePage, onNavigate, cartCount }: Naviga
         </div>
 
         {mobileOpen && (
-          <div className="border-t border-[#769a75]/30 py-3 md:hidden">
+          <div id="mobile-primary-nav" className="border-t border-[#769a75]/30 py-3 md:hidden">
             <ul className="flex flex-col gap-2">
               {menuItems.map((item) => (
                 <li key={`mobile-${item.label}`}>
@@ -84,6 +88,7 @@ export default function Navigation({ activePage, onNavigate, cartCount }: Naviga
                       onNavigate(item.page);
                       setMobileOpen(false);
                     }}
+                    aria-current={activePage === item.page ? 'page' : undefined}
                     className={`w-full text-left uppercase tracking-wider px-3 py-2 transition-all ${
                       activePage === item.page
                         ? 'bg-[#00FF5A] text-[#131e13]'

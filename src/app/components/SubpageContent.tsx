@@ -148,7 +148,7 @@ export default function SubpageContent({
   const cartTotal = cartSubtotal + shippingFee;
 
   return (
-    <main className="container mx-auto px-4 py-12">
+    <main id="main-content" className="container mx-auto px-4 py-12">
       <section className="mb-8 rounded-sm border border-[#769a75]/60 bg-[#101910cc] p-4 sm:p-6">
         <h2
           className="uppercase"
@@ -214,7 +214,6 @@ export default function SubpageContent({
                         price: item.price,
                         image: item.image,
                       });
-                      onNavigate('cart');
                     }}
                     className="mt-2 border border-[#00FF5A]/70 px-2 py-1 text-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
                     style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em' }}
@@ -290,8 +289,8 @@ export default function SubpageContent({
       )}
 
       {page === 'cart' && (
-        <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="rounded-sm border border-[#769a75]/50 bg-[#101910c7] p-5">
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="min-w-0 rounded-sm border border-[#769a75]/50 bg-[#101910c7] p-5">
             <div className="overflow-x-auto">
               <div className="min-w-[640px]">
                 <div className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 border-b border-[#769a75]/30 pb-3 text-[#00FF5A] uppercase"
@@ -351,7 +350,7 @@ export default function SubpageContent({
               </div>
             </div>
           </div>
-          <aside className="h-fit rounded-sm border border-[#769a75]/50 bg-[#101910c7] p-5 lg:sticky lg:top-24">
+          <aside className="w-full min-w-0 overflow-hidden h-fit rounded-sm border border-[#769a75]/50 bg-[#101910c7] p-5 lg:sticky lg:top-24">
             <div className="flex items-center justify-between text-[#769a75]" style={{ fontSize: '0.82rem' }}>
               <span>Subtotal</span>
               <span>EUR {cartSubtotal.toFixed(2)}</span>

@@ -42,6 +42,9 @@ export default function Hero({ onEnterStore }: HeroProps) {
   };
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroReleases.length);
     }, 4500);
@@ -51,6 +54,7 @@ export default function Hero({ onEnterStore }: HeroProps) {
 
   return (
     <section 
+      aria-label="Featured releases"
       className="relative py-20 border-b border-[#769a75]/30 overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #131e13 0%, #1a2a1a 100%)'
@@ -152,6 +156,7 @@ export default function Hero({ onEnterStore }: HeroProps) {
                   key={index}
                   onClick={() => setHeroIndex(index)}
                   aria-label={`Show hero release ${index + 1}`}
+                  aria-pressed={heroIndex === index}
                   className={`h-2.5 w-2.5 rounded-full transition-all ${
                     heroIndex === index ? 'bg-[#00FF5A] scale-110' : 'bg-[#769a75] hover:bg-[#9bc49a]'
                   }`}
