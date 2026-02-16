@@ -99,14 +99,18 @@ export interface CartItem extends CartItemInput {
 }
 
 const distroItems: DistroItem[] = [
-  { id: 'ritual-fracture', name: 'Ritual Fracture', artist: 'Void Chapel', image: '/darkage.jpg', format: 'CD', price: 12 },
-  { id: 'execution-bloom', name: 'Execution Bloom', artist: 'Blight Signal', image: '/biolence.jpg', format: 'CD', price: 12 },
-  { id: 'scars-of-division', name: 'Scars of Division', artist: 'War Engine', image: '/battlescars.jpg', format: 'CD', price: 12 },
-  { id: 'devotion-collapse', name: 'Devotion Collapse', artist: 'Temple Wreck', image: '/testemunhas.jpg', format: 'CD', price: 12 },
-  { id: 'iron-harvest', name: 'Iron Harvest', artist: 'Grey Legion', image: '/greywolf.jpg', format: 'CD', price: 12 },
-  { id: 'threshold-of-rot', name: 'Threshold of Rot', artist: 'Wound State', image: '/dekapited.jpg', format: 'CD', price: 12 },
-  { id: 'static-cataclysm', name: 'Static Cataclysm', artist: 'Night Relay', image: '/insecurity2.jpg', format: 'CD', price: 12 },
-  { id: 'sermon-of-ash', name: 'Sermon of Ash', artist: 'Poison Rite', image: '/poisonthepreacher.jpg', format: 'CD', price: 12 },
+  { id: 'fatal-exposure-bikini-atoll-broadcast', name: 'Bikini Atoll Broadcast', artist: 'Fatal Exposure', image: '/fatal exposure capa.jpg', format: 'CD', price: 12 },
+  { id: 'catachrest-target-of-ruin', name: 'Target of Ruin', artist: 'Catachrest', image: '/catachrest.jpg', format: 'CD', price: 12 },
+  { id: 'poison-the-preacher-vs-the-world', name: 'VS the World', artist: 'Poison the Preacher', image: '/poisonthepreacher.jpg', format: 'CD', price: 12 },
+  { id: 'biolence-violent-obliteration', name: 'Violent Obliteration', artist: 'Biolence', image: '/biolence.jpg', format: 'CD', price: 12 },
+  { id: 'dfc-sequencia-brutal', name: 'Sequência Brutal de Estaladas e Biqueirada', artist: 'D.F.C.', image: '/dfc.jpg', format: 'CD', price: 12 },
+  { id: 'psycho-mosher-madness-vortex', name: 'Trapped Into The Madness Vortex', artist: 'Psycho Mosher', image: '/psychomosher.jpg', format: 'CD', price: 12 },
+  { id: 'raging-slayer-catatonic-symphony', name: 'Catatonic Symphony', artist: 'Raging Slayer', image: '/raging slayer capa.jpg', format: 'CD', price: 12 },
+  { id: 'spoiled-collapse', name: 'Collapse', artist: 'Spoiled', image: '/spoiled.jpg', format: 'CD', price: 12 },
+  { id: 'dekapited-destruccion-trascendental', name: 'Destruccion Trascendental', artist: 'Dekapited', image: '/dekapited.jpg', format: 'CD', price: 12 },
+  { id: 'tvmvlo-portal-of-terror', name: 'Portal of Terror', artist: 'Tvmvlo', image: '/tvmvlo.jpg', format: 'CD', price: 12 },
+  { id: 'deathlike-stab-knife-murders', name: 'Knife Murders', artist: 'Deathlike Stab', image: '/deathlike capa.jpg', format: 'CD', price: 12 },
+  { id: 'animalesco-o-metodo', name: 'Animalesco, O Método', artist: 'Animalesco, o Método', image: '/animalesco.jpg', format: 'LP', price: 22 },
 ];
 
 const merchItems = [

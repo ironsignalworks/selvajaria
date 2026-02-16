@@ -10,7 +10,7 @@ import SubpageContent from './components/SubpageContent';
 import type { SubpageKey } from './components/SubpageContent';
 import type { CartItem, CartItemInput } from './components/SubpageContent';
 import { Toaster, toast } from 'sonner';
-import { HandMetal } from 'lucide-react';
+import { ChevronUp, HandMetal } from 'lucide-react';
 
 type AppPage = 'releases' | SubpageKey;
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
@@ -20,6 +20,7 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [releaseSort, setReleaseSort] = useState<ReleaseSort>('newest');
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
   const addToCart = (item: CartItemInput) => {
@@ -57,6 +58,16 @@ export default function App() {
     window.scrollTo(0, 0);
     setMobileFiltersOpen(false);
   }, [activePage]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const mobile = window.matchMedia('(max-width: 767px)').matches;
+      setShowBackToTop(window.scrollY > (mobile ? 160 : 380));
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
@@ -188,6 +199,17 @@ export default function App() {
           descriptionClassName: '!text-[#f4fbf3] !opacity-90',
         }}
       />
+      {showBackToTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed right-4 z-[95] rounded-full border border-[#00FF5A]/70 bg-[#131e13]/90 p-2 text-[#00FF5A] shadow-lg transition-all duration-150 hover:scale-105 hover:bg-[#00FF5A] hover:text-[#131e13] active:scale-95 active:bg-[#00FF5A] active:text-[#131e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF5A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#131e13] sm:right-6"
+          style={{ bottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}
+          aria-label="Back to top"
+          title="Back to top"
+        >
+          <ChevronUp className="h-5 w-5" />
+        </button>
+      )}
     </div>
   );
 }
