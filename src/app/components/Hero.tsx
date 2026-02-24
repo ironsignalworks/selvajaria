@@ -86,7 +86,17 @@ export default function Hero({ onEnterStore }: HeroProps) {
         <div className="absolute inset-0 bg-[radial-gradient(#00ff5a_1px,transparent_1px)] [background-size:28px_28px]" />
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 py-12 sm:py-16">
+      <div className="container relative z-10 mx-auto px-4 pt-8 pb-16 sm:pt-10 sm:pb-20">
+        <div className="mx-auto mb-8 flex max-w-5xl flex-col items-center text-center lg:mb-10">
+          <img
+            src={asset('/logo3.png')}
+            alt="Selvajaria Records"
+            className="h-48 w-auto object-contain sm:h-56 lg:h-64"
+          />
+          <p className="mt-3 text-xl font-semibold uppercase tracking-[0.1em] text-[#769a75] sm:text-2xl">
+            SELVAJARIA RECORDS - Underground label & distro
+          </p>
+        </div>
         <div className="mx-auto grid max-w-5xl grid-cols-1 items-center justify-items-center gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-2">
           <div className="relative mx-auto w-full max-w-[28rem] sm:max-w-[30rem]">
             <div className="relative aspect-square overflow-hidden bg-transparent">

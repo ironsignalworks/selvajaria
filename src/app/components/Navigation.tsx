@@ -19,6 +19,7 @@ interface MenuItem {
   label: string;
   page: NavPage;
 }
+
 export default function Navigation({
   activePage,
   onNavigate,
@@ -48,7 +49,7 @@ export default function Navigation({
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b-0 bg-[#0b120b]/95 backdrop-blur-sm" aria-label="Primary">
       <div className="container mx-auto px-6 lg:px-8">
-        <div className="hidden md:grid grid-cols-[240px_minmax(0,1fr)_240px] grid-rows-[auto_auto] items-center gap-x-8 gap-y-3 py-3">
+        <div className="hidden md:grid grid-cols-[240px_minmax(0,1fr)_240px] grid-rows-[auto_auto] items-center gap-x-8 gap-y-1 py-2">
           <button
             onClick={handleLogoClick}
             className="relative flex items-center justify-start self-start"
@@ -61,10 +62,12 @@ export default function Navigation({
                 className="h-full w-full object-contain object-center"
               />
             </div>
-            <p className="absolute left-0 top-full mt-2 whitespace-nowrap font-display text-xs font-bold uppercase tracking-[0.1em] text-[#00C747]">
+          </button>
+          <div className="col-start-1 row-start-2 h-0">
+            <p className="whitespace-nowrap font-display text-xs font-bold uppercase tracking-[0.1em] text-[#00C747]">
               Ripping ears apart since 2022
             </p>
-          </button>
+          </div>
 
           <div className="relative col-start-2 flex items-center justify-center">
             <div className="w-full max-w-[680px]">
@@ -112,7 +115,7 @@ export default function Navigation({
             </div>
           </div>
 
-          <div className="col-span-3 flex items-center justify-center -translate-y-1.5 pb-0">
+          <div className="col-span-3 flex items-center justify-center -translate-y-3 pb-0">
             <div className="flex items-center justify-center gap-7">
             {menuItems.map((item) => (
               <button
@@ -131,7 +134,7 @@ export default function Navigation({
           </div>
         </div>
 
-        <div className="py-3 md:hidden">
+        <div className="py-2 md:hidden">
           <div className="flex items-center justify-between">
             <button onClick={handleLogoClick} aria-label="Go to home releases page">
                                                                                                                                                                                                           <img

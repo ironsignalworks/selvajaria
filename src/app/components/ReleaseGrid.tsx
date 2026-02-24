@@ -644,7 +644,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
                   <ImageWithFallback
                     src={asset(release.image)}
                     alt={`${release.artist} - ${release.title}`}
-                    className="w-full aspect-square object-contain"
+                    className="w-full aspect-square object-cover"
                   />
                 </button>
 
@@ -664,34 +664,30 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
 
               </div>
 
-              <div className="mt-3 bg-[#101910]/92 p-4 sm:p-5">
-                <div className="mb-1 uppercase text-[0.7rem] font-bold tracking-[0.15em] text-[#00C747]">
+              <div className="mt-2 bg-[#101910]/92 p-4 sm:p-5">
+                <div className="mb-1 uppercase text-[0.95rem] font-extrabold leading-none tracking-[0.06em] text-[#00C747]">
                   {release.artist}
                 </div>
 
-                <div className="mb-2 min-h-[2.5rem] text-[0.95rem] font-semibold leading-tight text-[#f4fbf3]">
+                <div className="mb-3 min-h-[2.35rem] text-[0.8rem] font-semibold uppercase leading-tight tracking-[0.05em] text-[#f4fbf3]">
                   {release.title}
                 </div>
 
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="flex gap-2">
+                <div className="mb-4 flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {release.formats.map((format) => {
-                      const Icon = formatIcons[format];
                       return (
-                        <span key={format} className="group relative inline-flex">
-                          <Icon className="h-4 w-4 text-[#769a75]" />
-                          <span
-                            role="tooltip"
-                            className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap border border-[#769a75]/60 bg-[#0b120b] px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.1em] text-[#f4fbf3] opacity-0 transition-opacity group-hover:opacity-100"
-                          >
-                            {formatLabels[format]}
-                          </span>
+                        <span
+                          key={format}
+                          className="inline-flex items-center border border-[#769a75]/70 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.1em] text-[#b7c8b5]"
+                        >
+                          {formatLabels[format]}
                         </span>
                       );
                     })}
                   </div>
 
-                  <div className="text-[0.95rem] font-bold text-[#f4fbf3]">
+                  <div className="whitespace-nowrap text-[1.1rem] font-extrabold leading-none text-[#f4fbf3]">
                     EUR {release.price.toFixed(2)}
                   </div>
                 </div>

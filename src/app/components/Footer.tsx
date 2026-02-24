@@ -20,7 +20,9 @@ export default function Footer({ onNavigate }: FooterProps) {
               SELVAJARIA RECORDS
             </p>
             <p className="mt-0 mx-auto max-w-xs text-sm leading-relaxed text-[#769a75] md:mx-0">
-              Independent record label rooted in the underground. Distribution and scene support.
+              Independent underground metal label from Portugal.
+              <br />
+              CD • Vinyl • Tape • Worldwide shipping
             </p>
             <div className="mt-5 flex justify-center gap-4 md:justify-start">
               <a href="https://selvajariarecords.bandcamp.com/" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Music className="h-5 w-5" /></a>
@@ -76,4 +78,3 @@ export default function Footer({ onNavigate }: FooterProps) {
     </footer>
   );
 }
-
