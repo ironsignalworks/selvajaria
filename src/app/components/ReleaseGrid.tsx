@@ -1,7 +1,8 @@
 ﻿import { useEffect, useState } from 'react';
 import { ImageWithFallback } from './ImageWithFallback';
-import { Disc3, Disc, CassetteTape, Download } from 'lucide-react';
+import { Disc3, Disc, CassetteTape, Download, Play } from 'lucide-react';
 import type { CartItemInput } from './SubpageContent';
+import type { CatalogFilters } from './FilterSidebar';
 
 interface Release {
   id: number;
@@ -15,6 +16,8 @@ interface Release {
   description: string;
   details: string[];
   trackHighlights: string[];
+  listeningUrl?: string;
+  inStock?: boolean;
 }
 
 export type ReleaseSort =
@@ -24,11 +27,12 @@ export type ReleaseSort =
   | 'price-high'
   | 'artist';
 
-const releases: Release[] = [
+export const releases: Release[] = [
   {
     id: 1,
     title: 'Bikini Atoll Broadcast',
     artist: 'FATAL EXPOSURE',
+    listeningUrl: 'https://selvajariarecords.bandcamp.com/',
     formats: ['cd'],
     price: 12,
     image: '/fatal exposure capa.jpg',
@@ -42,6 +46,7 @@ const releases: Release[] = [
     id: 2,
     title: 'Target of Ruin',
     artist: 'CATACHREST',
+    listeningUrl: 'https://selvajariarecords.bandcamp.com/',
     formats: ['cd'],
     price: 12,
     image: '/catachrest.jpg',
@@ -55,6 +60,7 @@ const releases: Release[] = [
     id: 3,
     title: 'VS the World',
     artist: 'POISON THE PREACHER',
+    listeningUrl: 'https://selvajariarecords.bandcamp.com/',
     formats: ['cd'],
     price: 12,
     image: '/poisonthepreacher.jpg',
@@ -436,21 +442,63 @@ const formatIcons = {
   tape: CassetteTape,
   digital: Download,
 };
+const formatLabels: Record<keyof typeof formatIcons, string> = {
+  vinyl: 'Vinyl',
+  cd: 'CD',
+  tape: 'Cassette',
+  digital: 'Digital',
+};
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+const DEFAULT_LISTEN_URL = 'https://selvajariarecords.bandcamp.com/';
 
 interface ReleaseGridProps {
   sortBy: ReleaseSort;
   onAddToCart: (item: CartItemInput) => void;
+  searchQuery: string;
+  filters: CatalogFilters;
 }
 
-export default function ReleaseGrid({ sortBy, onAddToCart }: ReleaseGridProps) {
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
-  const [previewRelease, setPreviewRelease] = useState<Release | null>(null);
+const releaseCountriesById: Record<number, string[]> = {
+  2: ['spain'],
+  3: ['spain'],
+  4: ['spain'],
+  5: ['brazil'],
+  10: ['spain'],
+  11: ['portugal'],
+  13: ['brazil'],
+  18: ['portugal'],
+  19: ['brazil'],
+  20: ['spain'],
+  21: ['spain'],
+  22: ['portugal'],
+  23: ['spain'],
+  24: ['spain'],
+  25: ['spain'],
+  28: ['brazil'],
+  30: ['spain'],
+  31: ['spain'],
+  32: ['brazil'],
+};
+
+const getReleaseCountryTags = (release: Release) => {
+  return releaseCountriesById[release.id] ?? ['worldwide'];
+};
+
+export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters }: ReleaseGridProps) {
   const [detailModalRelease, setDetailModalRelease] = useState<Release | null>(null);
+  const [isDetailImageLarge, setIsDetailImageLarge] = useState(false);
   const [showAllReleases, setShowAllReleases] = useState(false);
   const latestReleaseId = 1;
+  const closeReleaseDetails = () => {
+    setDetailModalRelease(null);
+    setIsDetailImageLarge(false);
+    requestAnimationFrame(() => {
+      document.getElementById('label-catalog-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
   const openReleaseDetails = (release: Release) => {
     setDetailModalRelease(release);
+    setIsDetailImageLarge(false);
   };
   const addReleaseToCart = (release: Release) => {
     onAddToCart({
@@ -477,63 +525,132 @@ export default function ReleaseGrid({ sortBy, onAddToCart }: ReleaseGridProps) {
         return b.year - a.year;
     }
   });
-  const displayedReleases = showAllReleases ? sortedReleases : sortedReleases.slice(0, 8);
+  const normalizedSearch = searchQuery.trim().toLowerCase();
+  const filteredReleases = sortedReleases.filter((release) => {
+    const matchesSearch = normalizedSearch
+      ? [release.artist, release.title, release.genre].some((field) =>
+          field.toLowerCase().includes(normalizedSearch)
+        )
+      : true;
+
+    const matchesFormat =
+      filters.formats.length === 0 ||
+      filters.formats.some((format) =>
+        release.formats.includes(format as Release['formats'][number])
+      );
+
+    const releaseGenre = release.genre.toLowerCase();
+    const matchesGenre =
+      filters.genres.length === 0 ||
+      filters.genres.some((genre) => releaseGenre.includes(genre.toLowerCase()));
+
+    const countryTags = getReleaseCountryTags(release);
+    const matchesCountry =
+      filters.countries.length === 0 ||
+      filters.countries.some((country) => countryTags.includes(country));
+
+    const matchesStock = !filters.inStockOnly || (release.inStock ?? true);
+
+    return matchesSearch && matchesFormat && matchesGenre && matchesCountry && matchesStock;
+  });
+  const displayedReleases = showAllReleases ? filteredReleases : filteredReleases.slice(0, 8);
   useEffect(() => {
     const handleHeroView = (event: Event) => {
       const customEvent = event as CustomEvent<{ artist: string; title: string }>;
       const artist = customEvent.detail?.artist?.toUpperCase();
       const title = customEvent.detail?.title?.toUpperCase();
-      if (!artist || !title) return;
+
+      if (!artist || !title) {
+        console.warn('Hero view event missing artist or title');
+        return;
+      }
 
       const matched = releases.find(
-        (release) => release.artist.toUpperCase() === artist && release.title.toUpperCase() === title
+        (release) =>
+          release.artist.toUpperCase() === artist &&
+          release.title.toUpperCase() === title
       );
+
       if (matched) {
         setDetailModalRelease(matched);
+      } else {
+        console.warn(`No matching release found for: ${artist} - ${title}`);
       }
     };
 
+    // expose a direct opener on window for more reliable invocation from other components
+    (window as any).openRelease = (artist: string, title: string) => {
+      if (!artist || !title) return;
+      const a = artist.toUpperCase();
+      const t = title.toUpperCase();
+      const matched = releases.find(
+        (release) => release.artist.toUpperCase() === a && release.title.toUpperCase() === t
+      );
+      if (matched) setDetailModalRelease(matched);
+    };
+
+    // handle a pending hero request (set by Hero) if present
+    const pending = (window as any).__requestedHeroView;
+    if (pending?.artist && pending?.title) {
+      try {
+        const a = pending.artist.toUpperCase();
+        const t = pending.title.toUpperCase();
+        const matched = releases.find(
+          (release) => release.artist.toUpperCase() === a && release.title.toUpperCase() === t
+        );
+        if (matched) {
+          setDetailModalRelease(matched);
+        }
+      } finally {
+        try {
+          delete (window as any).__requestedHeroView;
+        } catch (e) {
+          (window as any).__requestedHeroView = undefined;
+        }
+      }
+    }
+
     window.addEventListener('hero-view-release', handleHeroView as EventListener);
-    return () => window.removeEventListener('hero-view-release', handleHeroView as EventListener);
+    return () => {
+      window.removeEventListener('hero-view-release', handleHeroView as EventListener);
+      // clean up the global opener
+      try {
+        delete (window as any).openRelease;
+      } catch (e) {
+        (window as any).openRelease = undefined;
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    setShowAllReleases(false);
+  }, [searchQuery, filters]);
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      <div id="releases-catalog" className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-4">
         {displayedReleases.map((release) => {
-          const isHovered = hoveredId === release.id;
-
           return (
             <div
               key={release.id}
-              className="relative group cursor-pointer"
-              onMouseEnter={() => setHoveredId(release.id)}
-              onMouseLeave={() => setHoveredId(null)}
+              className="group relative overflow-hidden"
             >
-              <div className="relative mb-3 overflow-hidden">
+              <div className="relative overflow-hidden bg-transparent">
                 <button
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setPreviewRelease(release);
-                  }}
+                  onClick={() => openReleaseDetails(release)}
                   className="block w-full"
-                  aria-label={`Open large cover for ${release.artist} ${release.title}`}
+                  aria-label={`View release details for ${release.artist} ${release.title}`}
                 >
                   <ImageWithFallback
                     src={asset(release.image)}
                     alt={`${release.artist} - ${release.title}`}
-                    className="w-full aspect-square object-cover transition-transform duration-300"
-                    style={{
-                      transform: isHovered ? 'translateY(-4px) scale(1.02)' : 'translateY(0) scale(1)',
-                      border: `2px solid ${isHovered ? '#00FF5A' : '#769a75'}`,
-                      boxShadow: isHovered ? '0 8px 30px rgba(0, 255, 90, 0.4)' : '0 2px 8px rgba(0, 0, 0, 0.3)',
-                    }}
+                    className="w-full aspect-square object-contain"
                   />
                 </button>
 
                 {release.id === latestReleaseId && (
                   <div
-                    className="absolute top-2 left-2 bg-[#00FF5A] px-2 py-1"
+                    className="absolute top-2 left-2 bg-[#00C747] px-2 py-1"
                     style={{
                       fontSize: '0.65rem',
                       fontWeight: 700,
@@ -545,97 +662,50 @@ export default function ReleaseGrid({ sortBy, onAddToCart }: ReleaseGridProps) {
                   </div>
                 )}
 
-                {isHovered && (
-                  <div
-                    className="absolute inset-0 bg-[#131e13]/95 flex flex-col items-center justify-center gap-3 transition-opacity pointer-events-none"
-                    style={{
-                      border: '2px solid #00FF5A',
-                    }}
-                  >
-                    <div className="flex gap-3">
-                      {release.formats.map((format) => {
-                        const Icon = formatIcons[format];
-                        return (
-                          <div key={format} className="text-[#00FF5A]" title={format}>
-                            <Icon className="w-6 h-6" />
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <button
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        openReleaseDetails(release);
-                      }}
-                      className="pointer-events-auto px-6 py-2 bg-[#00FF5A] text-[#131e13] uppercase tracking-wider hover:bg-[#00FF5A]/90 transition-all"
-                      style={{
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        letterSpacing: '0.1em',
-                      }}
-                    >
-                      View Release
-                    </button>
-                  </div>
-                )}
               </div>
 
-              <div>
-                <div
-                  className="uppercase mb-1"
-                  style={{
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.15em',
-                    color: '#00FF5A',
-                  }}
-                >
+              <div className="mt-3 bg-[#101910]/92 p-4 sm:p-5">
+                <div className="mb-1 uppercase text-[0.7rem] font-bold tracking-[0.15em] text-[#00C747]">
                   {release.artist}
                 </div>
 
-                <div
-                  className="mb-2"
-                  style={{
-                    fontSize: '0.875rem',
-                    fontWeight: 600,
-                    color: '#f4fbf3',
-                  }}
-                >
+                <div className="mb-2 min-h-[2.5rem] text-[0.95rem] font-semibold leading-tight text-[#f4fbf3]">
                   {release.title}
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between">
                   <div className="flex gap-2">
                     {release.formats.map((format) => {
                       const Icon = formatIcons[format];
-                      return <Icon key={format} className="w-4 h-4 text-[#769a75]" />;
+                      return (
+                        <span key={format} className="group relative inline-flex">
+                          <Icon className="h-4 w-4 text-[#769a75]" />
+                          <span
+                            role="tooltip"
+                            className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap border border-[#769a75]/60 bg-[#0b120b] px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.1em] text-[#f4fbf3] opacity-0 transition-opacity group-hover:opacity-100"
+                          >
+                            {formatLabels[format]}
+                          </span>
+                        </span>
+                      );
                     })}
                   </div>
 
-                  <div
-                    style={{
-                      fontSize: '0.875rem',
-                      fontWeight: 700,
-                      color: '#f4fbf3',
-                    }}
-                  >
+                  <div className="text-[0.95rem] font-bold text-[#f4fbf3]">
                     EUR {release.price.toFixed(2)}
                   </div>
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => openReleaseDetails(release)}
-                    className="w-full border border-[#00FF5A]/60 px-3 py-2 text-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13] transition-colors uppercase"
-                    style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em' }}
+                    className="w-full border-2 border-[#00C747]/70 px-2 py-1 text-[0.56rem] font-bold uppercase leading-[1.05] tracking-[0.08em] text-[#00C747] transition-colors hover:bg-[#00C747] hover:text-[#131e13]"
                   >
                     View Release
                   </button>
                   <button
                     onClick={() => addReleaseToCart(release)}
-                    className="w-full border border-[#769a75]/70 px-3 py-2 text-[#f4fbf3] hover:border-[#00FF5A] hover:text-[#00FF5A] transition-colors uppercase"
-                    style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em' }}
+                    className="w-full border-2 border-[#769a75]/70 px-2 py-1 text-[0.56rem] font-bold uppercase leading-[1.05] tracking-[0.08em] text-[#f4fbf3] transition-colors hover:border-[#00C747] hover:text-[#00C747]"
                   >
                     Add To Cart
                   </button>
@@ -646,11 +716,18 @@ export default function ReleaseGrid({ sortBy, onAddToCart }: ReleaseGridProps) {
         })}
       </div>
 
-      {releases.length > 8 && (
+      {filteredReleases.length === 0 && (
+        <div className="mt-8 border border-[#769a75]/40 bg-[#101910] px-6 py-8 text-center">
+          <p className="text-sm uppercase tracking-[0.12em] text-[#769a75]">No releases found</p>
+          <p className="mt-2 text-[#f4fbf3]">Try a different artist, title, or genre.</p>
+        </div>
+      )}
+
+      {filteredReleases.length > 8 && (
         <div className="mt-6 flex justify-center">
           <button
             onClick={() => setShowAllReleases((prev) => !prev)}
-            className="border border-[#00FF5A]/70 px-6 py-2 text-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13] transition-colors uppercase"
+            className="border border-[#00C747]/70 px-6 py-2 text-[#00C747] hover:bg-[#00C747] hover:text-[#131e13] transition-colors uppercase"
             style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em' }}
           >
             {showAllReleases ? 'Show Less' : 'View More'}
@@ -658,120 +735,128 @@ export default function ReleaseGrid({ sortBy, onAddToCart }: ReleaseGridProps) {
         </div>
       )}
 
-      {previewRelease && (
-        <div
-          className="fixed inset-0 z-[90] flex items-center justify-center bg-[#050805]/90 p-4"
-          onClick={() => setPreviewRelease(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Release cover preview"
-        >
-          <div
-            className="relative w-full max-w-4xl border border-[#00FF5A]/60 bg-[#101910] p-4"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="mb-3 flex justify-end">
-              <button
-                onClick={() => setPreviewRelease(null)}
-                className="border border-[#00FF5A]/70 px-3 py-1 text-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
-                style={{ fontSize: '0.7rem', letterSpacing: '0.1em' }}
-              >
-                CLOSE
-              </button>
-            </div>
-            <ImageWithFallback
-              src={asset(previewRelease.image)}
-              alt={`${previewRelease.artist} - ${previewRelease.title}`}
-              className="max-h-[78vh] w-full object-contain"
-            />
-            <p className="mt-3 text-center text-[#f4fbf3]" style={{ fontSize: '0.85rem', letterSpacing: '0.08em' }}>
-              {previewRelease.artist} - {previewRelease.title}
-            </p>
-            <div className="mt-4 flex justify-center">
-              <button
-                onClick={() => addReleaseToCart(previewRelease)}
-                className="border border-[#769a75]/70 px-5 py-2 text-[#f4fbf3] hover:border-[#00FF5A] hover:text-[#00FF5A] transition-colors uppercase"
-                style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em' }}
-              >
-                Add To Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {detailModalRelease && (
         <div
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-[#050805]/92 p-4"
-          onClick={() => setDetailModalRelease(null)}
+          className="fixed inset-0 z-[95] flex items-center justify-center bg-[#050805]/92 p-4 backdrop-blur-[2px] sm:p-6"
+          onClick={closeReleaseDetails}
           role="dialog"
           aria-modal="true"
           aria-label={`Release details for ${detailModalRelease.artist} ${detailModalRelease.title}`}
         >
           <div
-            className="w-full max-h-[90vh] max-w-3xl overflow-y-auto border border-[#00FF5A]/60 bg-[#101910] p-4 sm:p-6"
+            className="flex max-h-[84vh] w-full max-w-4xl flex-col overflow-hidden rounded-sm border-2 border-[#769a75]/60 bg-[#101910]"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="mb-3 flex justify-end">
+            <div className="flex items-start justify-between gap-4 border-b border-[#769a75]/30 px-4 py-3 sm:px-6">
+              <div>
+                <p className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#00C747]">
+                  {detailModalRelease.artist}
+                </p>
+                <h3 className="mt-1 text-base font-semibold uppercase tracking-[0.05em] text-[#f4fbf3] sm:text-lg">
+                  {detailModalRelease.title}
+                </h3>
+              </div>
               <button
-                onClick={() => setDetailModalRelease(null)}
-                className="border border-[#00FF5A]/70 px-3 py-1 text-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
-                style={{ fontSize: '0.7rem', letterSpacing: '0.1em' }}
+                onClick={closeReleaseDetails}
+                className="border border-[#00C747]/70 px-3 py-1 text-[0.7rem] tracking-[0.1em] text-[#00C747] hover:bg-[#00C747] hover:text-[#131e13]"
               >
                 CLOSE
               </button>
             </div>
-            <button
-              onClick={() => setPreviewRelease(detailModalRelease)}
-              className="block w-full"
-              aria-label={`Open large cover for ${detailModalRelease.artist} ${detailModalRelease.title}`}
-            >
-              <ImageWithFallback
-                src={asset(detailModalRelease.image)}
-                alt={`${detailModalRelease.artist} - ${detailModalRelease.title}`}
-                className="mx-auto h-auto w-full max-w-[300px] border border-[#769a75]/70 object-cover sm:max-w-[360px]"
-              />
-            </button>
-            <h3 className="mt-4 text-center uppercase text-[#f4fbf3]" style={{ fontSize: 'clamp(1rem, 2.4vw, 1.25rem)', fontWeight: 700, letterSpacing: '0.08em' }}>
-              {detailModalRelease.artist} - {detailModalRelease.title}
-            </h3>
-            <p className="mt-3 text-center text-[#b7c8b5]" style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
-              {detailModalRelease.description}
-            </p>
-            <div className="mt-4 grid grid-cols-2 gap-2 text-[#769a75] sm:flex sm:flex-wrap sm:justify-center sm:gap-6" style={{ fontSize: '0.75rem', letterSpacing: '0.06em' }}>
-              <span>YEAR: {detailModalRelease.year}</span>
-              <span>GENRE: {detailModalRelease.genre.toUpperCase()}</span>
-              <span>FORMAT: {detailModalRelease.formats.join(', ').toUpperCase()}</span>
-              <span>PRICE: EUR {detailModalRelease.price.toFixed(2)}</span>
-            </div>
-            <div className="mt-4 grid gap-2 text-[#b7c8b5]" style={{ fontSize: '0.85rem', lineHeight: 1.5 }}>
-              {detailModalRelease.details.map((detail) => (
-                <p key={detail}>- {detail}</p>
-              ))}
-            </div>
-            <div className="mt-4 text-center">
-              <p className="uppercase text-[#00FF5A]" style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em' }}>
-                Track Highlights
-              </p>
-              <p className="mt-2 text-[#f4fbf3]" style={{ fontSize: '0.9rem', letterSpacing: '0.04em' }}>
-                {detailModalRelease.trackHighlights.join(' / ')}
-              </p>
-            </div>
-            <div className="mt-5 flex justify-center">
-              <button
-                onClick={() => addReleaseToCart(detailModalRelease)}
-                className="border border-[#769a75]/70 px-6 py-2 text-[#f4fbf3] hover:border-[#00FF5A] hover:text-[#00FF5A] transition-colors uppercase"
-                style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em' }}
-              >
-                Add To Cart
-              </button>
+
+            <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[minmax(240px,34%)_1fr]">
+              <div className="border-b border-[#769a75]/25 p-4 sm:p-6 lg:border-b-0 lg:border-r">
+                <button
+                  type="button"
+                  onClick={() => setIsDetailImageLarge((prev) => !prev)}
+                  className="mx-auto block w-full max-w-[300px] overflow-hidden"
+                  aria-label={`Enlarge cover for ${detailModalRelease.artist} ${detailModalRelease.title}`}
+                >
+                  <ImageWithFallback
+                    src={asset(detailModalRelease.image)}
+                    alt={`${detailModalRelease.artist} - ${detailModalRelease.title}`}
+                    className="h-auto w-full object-contain"
+                  />
+                </button>
+
+                <div className="mt-4 grid grid-cols-2 gap-2 text-[0.82rem] tracking-[0.05em] text-[#769a75]">
+                  <div><span className="text-[#00C747]">YEAR:</span> {detailModalRelease.year}</div>
+                  <div><span className="text-[#00C747]">GENRE:</span> {detailModalRelease.genre.toUpperCase()}</div>
+                  <div><span className="text-[#00C747]">FORMAT:</span> {detailModalRelease.formats.join(', ').toUpperCase()}</div>
+                  <div><span className="text-[#00C747]">PRICE:</span> EUR {detailModalRelease.price.toFixed(2)}</div>
+                </div>
+              </div>
+
+              <div className="flex min-h-0 flex-col">
+                <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-4 sm:px-6">
+                  <div>
+                    <p className="text-[0.74rem] font-bold uppercase tracking-[0.12em] text-[#00C747]">Description</p>
+                    <p className="mt-2 text-[0.98rem] leading-relaxed text-[#b7c8b5]">
+                      {detailModalRelease.description}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-[0.74rem] font-bold uppercase tracking-[0.12em] text-[#00C747]">Details</p>
+                    <ul className="mt-2 space-y-1 text-[0.9rem] leading-relaxed text-[#b7c8b5]">
+                      {detailModalRelease.details.map((detail) => (
+                        <li key={detail}>- {detail}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-[0.74rem] font-bold uppercase tracking-[0.12em] text-[#00C747]">Tracks</p>
+                    <p className="mt-2 text-[0.9rem] leading-relaxed tracking-[0.04em] text-[#f4fbf3]">
+                      {detailModalRelease.trackHighlights.join(' / ')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border-t border-[#769a75]/25 p-4 sm:px-6 sm:py-4">
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <button
+                      onClick={() => addReleaseToCart(detailModalRelease)}
+                      className="flex-1 border border-[#769a75]/70 px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-[#f4fbf3] transition-colors hover:border-[#00C747] hover:text-[#00C747]"
+                    >
+                      Add To Cart
+                    </button>
+                    <a
+                      href={detailModalRelease.listeningUrl ?? DEFAULT_LISTEN_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex flex-1 items-center justify-center gap-2 border border-[#00C747]/70 bg-[#00C747] px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-[#131e13] transition-all hover:bg-[#00C747]/90"
+                    >
+                      <Play className="h-3 w-3" />
+                      Listen
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       )}
+
+      {detailModalRelease && isDetailImageLarge && (
+        <button
+          type="button"
+          onClick={() => setIsDetailImageLarge(false)}
+          className="large-image-overlay fixed inset-0 z-[110] flex items-center justify-center bg-[#050805]/85"
+          aria-label="Close full image view"
+        >
+          <ImageWithFallback
+            src={asset(detailModalRelease.image)}
+            alt={`${detailModalRelease.artist} - ${detailModalRelease.title}`}
+            className="large-image-content max-h-[92vh] max-w-[92vw] object-contain"
+          />
+        </button>
+      )}
+
     </>
   );
 }
+
 
 
 

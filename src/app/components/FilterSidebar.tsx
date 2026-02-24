@@ -1,9 +1,36 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Checkbox } from './ui/checkbox';
 
-export default function FilterSidebar() {
-  const [selectedFormats, setSelectedFormats] = useState<string[]>([]);
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+export interface CatalogFilters {
+  formats: string[];
+  genres: string[];
+  countries: string[];
+  inStockOnly: boolean;
+}
+
+interface FilterSidebarProps {
+  value?: CatalogFilters;
+  onChange?: (next: CatalogFilters) => void;
+}
+
+const EMPTY_FILTERS: CatalogFilters = {
+  formats: [],
+  genres: [],
+  countries: [],
+  inStockOnly: false,
+};
+
+export default function FilterSidebar({ value, onChange }: FilterSidebarProps) {
+  const [localFilters, setLocalFilters] = useState<CatalogFilters>(EMPTY_FILTERS);
+  const filters = value ?? localFilters;
+
+  const setFilters = (updater: (prev: CatalogFilters) => CatalogFilters) => {
+    if (value && onChange) {
+      onChange(updater(value));
+      return;
+    }
+    setLocalFilters(updater);
+  };
 
   const formats = [
     { id: 'vinyl', label: 'Vinyl' },
@@ -45,7 +72,7 @@ export default function FilterSidebar() {
           fontSize: '0.75rem',
           fontWeight: 700,
           letterSpacing: '0.15em',
-          color: '#00FF5A'
+          color: '#00C747'
         }}
       >
         {title}
@@ -57,7 +84,7 @@ export default function FilterSidebar() {
               id={item.id}
               checked={selectedItems.includes(item.id)}
               onCheckedChange={() => onToggle(item.id)}
-              className="border-[#769a75] data-[state=checked]:bg-[#00FF5A] data-[state=checked]:border-[#00FF5A]"
+              className="border-[#769a75] data-[state=checked]:bg-[#00C747] data-[state=checked]:border-[#00C747]"
             />
             <label
               htmlFor={item.id}
@@ -78,22 +105,31 @@ export default function FilterSidebar() {
   );
 
   const toggleFormat = (id: string) => {
-    setSelectedFormats(prev => 
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
-    );
+    setFilters((prev) => ({
+      ...prev,
+      formats: prev.formats.includes(id) ? prev.formats.filter((f) => f !== id) : [...prev.formats, id],
+    }));
   };
 
   const toggleGenre = (id: string) => {
-    setSelectedGenres(prev => 
-      prev.includes(id) ? prev.filter(g => g !== id) : [...prev, id]
-    );
+    setFilters((prev) => ({
+      ...prev,
+      genres: prev.genres.includes(id) ? prev.genres.filter((g) => g !== id) : [...prev.genres, id],
+    }));
+  };
+
+  const toggleCountry = (id: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      countries: prev.countries.includes(id) ? prev.countries.filter((c) => c !== id) : [...prev.countries, id],
+    }));
   };
 
   return (
     <aside className="w-64 pr-8">
       <div className="sticky top-24">
         <h2 
-          className="uppercase mb-6 pb-3 border-b-2 border-[#00FF5A]"
+          className="mb-6 border-b-2 border-[#00C747] pb-3 font-display uppercase"
           style={{
             fontSize: '0.875rem',
             fontWeight: 700,
@@ -107,29 +143,33 @@ export default function FilterSidebar() {
         <FilterSection
           title="Format"
           items={formats}
-          selectedItems={selectedFormats}
+          selectedItems={filters.formats}
           onToggle={toggleFormat}
         />
 
         <FilterSection
           title="Genre"
           items={genres}
-          selectedItems={selectedGenres}
+          selectedItems={filters.genres}
           onToggle={toggleGenre}
         />
 
         <FilterSection
           title="Country"
           items={countries}
-          selectedItems={[]}
-          onToggle={() => {}}
+          selectedItems={filters.countries}
+          onToggle={toggleCountry}
         />
 
         <div className="mb-8">
           <div className="flex items-center gap-3">
             <Checkbox
               id="in-stock"
-              className="border-[#769a75] data-[state=checked]:bg-[#00FF5A] data-[state=checked]:border-[#00FF5A]"
+              checked={filters.inStockOnly}
+              onCheckedChange={(checked) =>
+                setFilters((prev) => ({ ...prev, inStockOnly: checked === true }))
+              }
+              className="border-[#769a75] data-[state=checked]:bg-[#00C747] data-[state=checked]:border-[#00C747]"
             />
             <label
               htmlFor="in-stock"
@@ -146,8 +186,10 @@ export default function FilterSidebar() {
           </div>
         </div>
 
-        <button 
-          className="w-full px-4 py-3 border border-[#00FF5A] text-[#00FF5A] uppercase tracking-wider hover:bg-[#00FF5A] hover:text-[#131e13] transition-all"
+        <button
+          type="button"
+          onClick={() => setFilters(() => EMPTY_FILTERS)}
+          className="brutalist-border w-full border-[#00C747] px-4 py-3 text-[#00C747] uppercase tracking-wider transition-colors hover:bg-[#00C747] hover:text-[#131e13]"
           style={{
             fontSize: '0.75rem',
             fontWeight: 700,
@@ -160,3 +202,4 @@ export default function FilterSidebar() {
     </aside>
   );
 }
+

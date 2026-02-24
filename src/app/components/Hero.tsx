@@ -31,135 +31,109 @@ export default function Hero({ onEnterStore }: HeroProps) {
   const [heroIndex, setHeroIndex] = useState(0);
   const current = heroReleases[heroIndex];
   const openCurrentRelease = () => {
-    window.dispatchEvent(
-      new CustomEvent('hero-view-release', {
-        detail: { artist: current.artist, title: current.title },
-      })
-    );
-    requestAnimationFrame(() => {
+    // store requested view on window in case listener isn't mounted yet
+    (window as any).__requestedHeroView = { artist: current.artist, title: current.title };
+
+    // try direct opener first (more reliable across rendering boundaries)
+    if ((window as any).openRelease) {
+      try {
+        (window as any).openRelease(current.artist, current.title);
+      } catch (e) {
+        // fallback to event dispatch
+        window.dispatchEvent(
+          new CustomEvent('hero-view-release', {
+            detail: { artist: current.artist, title: current.title },
+            bubbles: true,
+            cancelable: true,
+          })
+        );
+      }
+    } else {
+      window.dispatchEvent(
+        new CustomEvent('hero-view-release', {
+          detail: { artist: current.artist, title: current.title },
+          bubbles: true,
+          cancelable: true,
+        })
+      );
+    }
+
+    setTimeout(() => {
       document.getElementById('releases-catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    }, 120);
   };
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
     }
+
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroReleases.length);
     }, 4500);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   return (
-    <section 
+    <section
       aria-label="Featured releases"
-      className="relative py-20 border-b border-[#769a75]/30 overflow-hidden"
-      style={{
-        background: 'linear-gradient(180deg, #131e13 0%, #1a2a1a 100%)'
-      }}
+      className="relative min-h-[78vh] overflow-hidden bg-transparent"
     >
-      <div className="absolute inset-0 bg-[#00FF5A]/8" />
+      <div className="absolute inset-0 opacity-15 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(#00ff5a_1px,transparent_1px)] [background-size:28px_28px]" />
+      </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 items-center max-w-6xl mx-auto">
-          {/* Featured Release */}
-          <div className="relative group">
-            <div 
-              className="absolute inset-0 bg-[#00FF5A]/20 blur-3xl transition-opacity group-hover:opacity-100 opacity-50"
-            />
-            <button
-              onClick={() => setHeroIndex((prev) => (prev + 1) % heroReleases.length)}
-              className="block w-full cursor-pointer"
-              aria-label="Show next hero release"
-            >
-              <ImageWithFallback
-              src={asset(current.image)}
-              alt={`${current.artist} cover`}
-              className="relative w-full aspect-square object-cover border-4 border-[#00FF5A]/40 shadow-2xl"
-              style={{ boxShadow: '0 0 60px rgba(0, 255, 90, 0.3)' }}
-            />
-            </button>
-          </div>
-
-          {/* Hero Text */}
-          <div>
-            <div className="mb-8">
-              <h2 
-                className="uppercase mb-4"
-                style={{
-                  fontSize: 'clamp(1.7rem, 7vw, 3rem)',
-                  fontWeight: 800,
-                  letterSpacing: '0.05em',
-                  color: '#f4fbf3',
-                  lineHeight: 1.1
-                }}
-              >
-                {current.artist} -<br />
-                {current.title}
-              </h2>
-              
-              <p 
-                className="mb-8"
-                style={{
-                  fontSize: '1rem',
-                  color: '#769a75',
-                  letterSpacing: '0.05em',
-                  lineHeight: 1.6
-                }}
-              >
-                {current.line}
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+      <div className="container relative z-10 mx-auto px-4 py-12 sm:py-16">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 items-center justify-items-center gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-2">
+          <div className="relative mx-auto w-full max-w-[28rem] sm:max-w-[30rem]">
+            <div className="relative aspect-square overflow-hidden bg-transparent">
               <button
                 onClick={openCurrentRelease}
-                className="inline-flex items-center justify-center px-8 py-4 border-2 border-[#769a75] text-[#f4fbf3] uppercase tracking-wider hover:border-[#00FF5A] hover:text-[#00FF5A] transition-all"
-                style={{
-                  fontSize: '0.875rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em'
-                }}
+                className="block h-full w-full cursor-pointer"
+                aria-label={`View release details for ${current.artist} ${current.title}`}
+              >
+                <ImageWithFallback
+                  src={asset(current.image)}
+                  alt={`${current.artist} cover`}
+                  className="hero-slide-in relative mx-auto h-full w-full object-contain"
+                />
+              </button>
+            </div>
+          </div>
+
+          <div className="w-full max-w-[34rem] justify-self-center text-left min-h-[19rem] sm:min-h-[21rem] lg:justify-self-start">
+            <h2 className="min-h-[7.75rem] font-display text-5xl font-bold uppercase leading-[0.95] tracking-tight text-[#f4fbf3] sm:min-h-[11rem] sm:text-7xl">
+              {current.artist}
+              <span className="block text-[#00FF5A]">{current.title}</span>
+            </h2>
+            <p className="mt-4 min-h-[3.5rem] max-w-xl text-lg font-medium leading-relaxed text-[#769a75] sm:text-xl">
+              {current.line}
+            </p>
+            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:justify-start sm:gap-4">
+              <button
+                onClick={openCurrentRelease}
+                className="border-2 border-[#769a75] bg-[#131e13] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#f4fbf3] hover:border-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
               >
                 View Release
               </button>
-              <a
-                href="#releases-catalog"
-                className="inline-flex items-center justify-center px-8 py-4 bg-[#00FF5A] text-[#131e13] uppercase tracking-wider hover:bg-[#00FF5A]/90 transition-all"
-                style={{
-                  fontSize: '0.875rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  boxShadow: '0 4px 20px rgba(0, 255, 90, 0.3)'
-                }}
-              >
-                Browse Releases
-              </a>
               <button
                 onClick={onEnterStore}
-                className="inline-flex items-center justify-center px-8 py-4 border-2 border-[#00FF5A] text-[#00FF5A] uppercase tracking-wider hover:bg-[#00FF5A] hover:text-[#131e13] transition-all"
-                style={{
-                  fontSize: '0.875rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em'
-                }}
+                className="border-2 border-[#00FF5A] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
               >
                 Enter Store
               </button>
             </div>
-
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-6 flex items-center justify-start gap-3">
               {heroReleases.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setHeroIndex(index)}
                   aria-label={`Show hero release ${index + 1}`}
                   aria-pressed={heroIndex === index}
-                  className={`h-2.5 w-2.5 rounded-full transition-all ${
-                    heroIndex === index ? 'bg-[#00FF5A] scale-110' : 'bg-[#769a75] hover:bg-[#9bc49a]'
-                  }`}
+                  className={`h-2.5 w-8 transition-all ${heroIndex === index ? 'bg-[#00FF5A]' : 'bg-[#769a75]/60 hover:bg-[#9bc49a]'}`}
                 />
               ))}
             </div>
@@ -167,12 +141,11 @@ export default function Hero({ onEnterStore }: HeroProps) {
         </div>
       </div>
 
-      {/* Hazard stripes decoration */}
       <div className="absolute bottom-0 left-0 right-0 h-2 flex">
         {Array.from({ length: 40 }).map((_, i) => (
           <div 
             key={i}
-            className={i % 2 === 0 ? 'bg-[#00FF5A]/30' : 'bg-transparent'}
+            className={i % 2 === 0 ? 'bg-[#00FF5A]/18' : 'bg-transparent'}
             style={{ flex: 1 }}
           />
         ))}

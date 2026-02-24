@@ -1,7 +1,7 @@
-@custom-variant dark (&:is(.dark *));
+﻿@custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-size: 16px;
+  --font-size: 17px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
   --card: #ffffff;
@@ -39,6 +39,21 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --brand-accent: #00c747;
+  --brand-surface: #131e13;
+  --brand-surface-2: #0b120b;
+}
+
+@layer utilities {
+  .text-xs {
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+
+  .text-sm {
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
 }
 
 .dark {
@@ -79,6 +94,7 @@
 }
 
 @theme inline {
+  --font-display: 'Barlow Condensed', sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -117,6 +133,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-surface: var(--brand-surface);
+  --color-brand-surface-2: var(--brand-surface-2);
 }
 
 @layer base {
@@ -178,4 +197,41 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+
+  a,
+  button,
+  [role='button'],
+  summary,
+  select,
+  input[type='checkbox'],
+  input[type='radio'],
+  label[for] {
+    cursor: pointer;
+  }
 }
+
+/* UI2-inspired utility classes mapped to existing palette */
+.brutalist-border {
+  border: 2px solid #769a75;
+}
+
+.brutalist-shadow {
+  box-shadow: 4px 4px 0 0 rgba(0, 255, 90, 0.22);
+}
+
+.brutalist-shadow-hover {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.brutalist-shadow-hover:hover {
+  box-shadow: 2px 2px 0 0 rgba(0, 255, 90, 0.3);
+  transform: translate(1px, 1px);
+}
+
+/* Hard disable rounded corners across the UI */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+

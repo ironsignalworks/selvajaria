@@ -1,3 +1,168 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+@keyframes heroSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(56px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-slide-in {
+  animation: heroSlideIn 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide-in {
+    animation: none;
+  }
+}
+
+@keyframes largeImageFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes largeImageScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.large-image-overlay {
+  animation: largeImageFadeIn 180ms ease-out;
+}
+
+.large-image-content {
+  animation: largeImageScaleIn 220ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .large-image-overlay,
+  .large-image-content {
+    animation: none;
+  }
+}
+
+@keyframes searchPanelBackdropIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes searchPanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.search-panel-backdrop {
+  animation: searchPanelBackdropIn 180ms ease-out;
+}
+
+.search-panel {
+  animation: searchPanelIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-panel-backdrop,
+  .search-panel {
+    animation: none;
+  }
+}
+
+@keyframes navVoucherDropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-voucher-drop-in {
+  animation: navVoucherDropIn 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-tagline {
+  position: relative;
+  display: inline-block;
+  transform: translateY(-30px);
+  color: transparent;
+  background-image:
+    linear-gradient(180deg, #f4fff6 0%, #00ff5a 58%, #0b9c44 100%),
+    repeating-linear-gradient(
+      105deg,
+      rgba(255, 255, 255, 0.22) 0 2px,
+      rgba(0, 0, 0, 0.16) 2px 4px
+    );
+  background-blend-mode: normal, multiply;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25),
+    0 3px 10px rgba(0, 255, 90, 0.28),
+    0 0 1px rgba(0, 0, 0, 0.7);
+  filter: contrast(1.08) saturate(1.12);
+  animation: heroTaglineDripIn 620ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.hero-tagline::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: rgba(0, 255, 90, 0.2);
+  transform: translate(1px, 1px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+@keyframes heroTaglineDripIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-52px) scaleY(1.14);
+    filter: blur(1px);
+  }
+
+  55% {
+    opacity: 1;
+    transform: translateY(-26px) scaleY(0.94);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-30px) scaleY(1);
+    filter: blur(0);
+  }
+}

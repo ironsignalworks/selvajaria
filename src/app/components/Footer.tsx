@@ -1,5 +1,7 @@
-import { Mail, Instagram, Music, Facebook, Youtube } from 'lucide-react';
+﻿import { Mail, Instagram, Music, Facebook, Youtube } from 'lucide-react';
 import type { SubpageKey } from './SubpageContent';
+
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
 interface FooterProps {
   onNavigate: (page: SubpageKey) => void;
@@ -7,272 +9,71 @@ interface FooterProps {
 
 export default function Footer({ onNavigate }: FooterProps) {
   return (
-    <footer className="bg-[#131e13] border-t border-[#769a75]/30 mt-20">
-      <div className="container mx-auto px-4 py-12">
-        <div className="mb-12 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
-          {/* Label Manifesto */}
-          <div>
-            <h3 
-              className="uppercase mb-4"
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 700,
-                letterSpacing: '0.15em',
-                color: '#00FF5A'
-              }}
-            >
-              The Underground Manifesto
-            </h3>
-            <p 
-              style={{
-                fontSize: '0.875rem',
-                color: '#769a75',
-                lineHeight: 1.7,
-                letterSpacing: '0.02em'
-              }}
-            >
-              Selvajaria Records exists to preserve the raw spirit of extreme metal. 
-              We champion the underground, press physical formats, and refuse compromise. 
-              Every release is a statement against mainstream mediocrity.
+    <footer className="mt-14 border-t-2 border-[#769a75] bg-[#0b120b] text-[#f4fbf3] md:mt-24">
+      <div className="container mx-auto px-4 pt-10 pb-5 md:pt-16 md:pb-11">
+        <div className="mb-8 grid grid-cols-1 gap-7 md:mb-12 md:gap-10 md:grid-cols-2 xl:grid-cols-4">
+          <div className="text-center md:text-left">
+            <button onClick={() => onNavigate('distro')} className="mx-auto flex items-center gap-2 md:mx-0">
+              <img src={asset('/logo3.png')} alt="Selvajaria Records" className="h-16 w-auto object-contain" />
+            </button>
+            <p className="mt-5 font-display text-xl font-bold uppercase tracking-tight text-[#f4fbf3]">
+              SELVAJARIA RECORDS
             </p>
+            <p className="mt-0 mx-auto max-w-xs text-sm leading-relaxed text-[#769a75] md:mx-0">
+              Independent record label rooted in the underground. Distribution and scene support.
+            </p>
+            <div className="mt-5 flex justify-center gap-4 md:justify-start">
+              <a href="https://selvajariarecords.bandcamp.com/" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Music className="h-5 w-5" /></a>
+              <a href="https://www.instagram.com/selvajaria_records/" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Instagram className="h-5 w-5" /></a>
+              <a href="https://www.facebook.com/selvajariarecords/" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Facebook className="h-5 w-5" /></a>
+              <a href="https://www.youtube.com/@SelvajariaRecords" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Youtube className="h-5 w-5" /></a>
+              <a href="https://www.discogs.com/label/2788133-Selvajaria-Records" target="_blank" rel="noreferrer" className="hover:text-[#00C747]">Discogs</a>
+            </div>
           </div>
 
-          {/* Newsletter */}
           <div>
-            <h3 
-              className="uppercase mb-4"
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 700,
-                letterSpacing: '0.15em',
-                color: '#00FF5A'
-              }}
-            >
-              Join the Distro List
-            </h3>
-            <p 
-              className="mb-4"
-              style={{
-                fontSize: '0.75rem',
-                color: '#769a75',
-                letterSpacing: '0.02em'
-              }}
-            >
-              Get updates on new releases, restocks, and limited pressings.
-            </p>
-            <div className="flex flex-col gap-2 sm:flex-row">
+            <h3 className="mb-5 font-display text-sm font-bold uppercase tracking-[0.18em] text-[#00C747]">Shop</h3>
+            <div className="flex flex-col gap-3 text-sm text-[#769a75]">
+              <button onClick={() => onNavigate('distro')} className="text-left hover:text-[#f4fbf3]">Distribution</button>
+              <button onClick={() => onNavigate('merch')} className="text-left hover:text-[#f4fbf3]">Merchandise</button>
+              <button onClick={() => onNavigate('cart')} className="text-left hover:text-[#f4fbf3]">Cart</button>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="mb-5 font-display text-sm font-bold uppercase tracking-[0.18em] text-[#00C747]">Support</h3>
+            <div className="flex flex-col gap-3 text-sm text-[#769a75]">
+              <button onClick={() => onNavigate('privacy')} className="text-left hover:text-[#f4fbf3]">Privacy & Shipping</button>
+              <button onClick={() => onNavigate('terms')} className="text-left hover:text-[#f4fbf3]">Terms</button>
+              <button onClick={() => onNavigate('contacto')} className="text-left hover:text-[#f4fbf3]">Contact</button>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="mb-5 font-display text-sm font-bold uppercase tracking-[0.18em] text-[#00C747]">Newsletter</h3>
+            <p className="mb-4 text-sm text-[#769a75]">Get updates on new releases, restocks, and limited pressings.</p>
+            <form className="flex" onSubmit={(event) => event.preventDefault()}>
               <input
                 type="email"
-                placeholder="your@email.com"
-                className="w-full flex-1 border border-[#769a75] bg-transparent px-4 py-2 text-[#f4fbf3] placeholder:text-[#769a75]/50 transition-colors focus:border-[#00FF5A] focus:outline-none"
-                style={{
-                  fontSize: '0.875rem'
-                }}
+                placeholder="EMAIL ADDRESS"
+                className="w-full border border-[#769a75]/50 bg-[#131e13] px-4 py-2 text-xs font-semibold tracking-[0.08em] text-[#f4fbf3] placeholder:text-[#769a75] focus:border-[#00C747] focus:outline-none"
               />
-              <button 
-                className="w-full px-6 py-2 bg-[#00FF5A] text-[#131e13] uppercase tracking-wider hover:bg-[#00FF5A]/90 transition-all sm:w-auto"
-                style={{
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em'
-                }}
-              >
-                Subscribe
-              </button>
-            </div>
-          </div>
-
-          {/* Social Links */}
-          <div>
-            <h3 
-              className="uppercase mb-4"
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 700,
-                letterSpacing: '0.15em',
-                color: '#00FF5A'
-              }}
-            >
-              Connect
-            </h3>
-            <div className="flex flex-col gap-3">
-              <a 
-                href="https://selvajariarecords.bandcamp.com/"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-start gap-3 text-[#f4fbf3] hover:text-[#00FF5A] transition-colors group"
-              >
-                <Music className="w-5 h-5" />
-                <span 
-                  className="uppercase"
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.1em'
-                  }}
-                >
-                  Bandcamp
-                </span>
-              </a>
-              <a 
-                href="https://www.instagram.com/selvajaria_records/"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-start gap-3 text-[#f4fbf3] hover:text-[#00FF5A] transition-colors group"
-              >
-                <Instagram className="w-5 h-5" />
-                <span 
-                  className="uppercase break-words"
-                  style={{
-                    fontSize: '0.68rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.08em'
-                  }}
-                >
-                  Selvajaria Records (@selvajaria_records)
-                </span>
-              </a>
-              <a 
-                href="https://www.facebook.com/selvajariarecords/"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-start gap-3 text-[#f4fbf3] hover:text-[#00FF5A] transition-colors group"
-              >
-                <Facebook className="w-5 h-5" />
-                <span 
-                  className="uppercase"
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.1em'
-                  }}
-                >
-                  Facebook
-                </span>
-              </a>
-              <a 
-                href="https://www.youtube.com/@SelvajariaRecords"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-start gap-3 text-[#f4fbf3] hover:text-[#00FF5A] transition-colors group"
-              >
-                <Youtube className="w-5 h-5" />
-                <span 
-                  className="uppercase"
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.1em'
-                  }}
-                >
-                  YouTube
-                </span>
-              </a>
-              <a 
-                href="mailto:selvajariarecords@gmail.com"
-                className="flex items-start gap-3 text-[#f4fbf3] hover:text-[#00FF5A] transition-colors group"
-              >
-                <Mail className="w-5 h-5" />
-                <span 
-                  className="uppercase"
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.1em'
-                  }}
-                >
-                  Email
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="flex flex-col gap-4 border-t border-[#769a75]/20 pt-8 md:flex-row md:items-center md:justify-between">
-          <p 
-            style={{
-              fontSize: '0.75rem',
-              color: '#769a75',
-              letterSpacing: '0.05em'
-            }}
-          >
-            © 2026 SELVAJARIA RECORDS. All rights reserved.
-          </p>
-          
-          <div className="flex flex-wrap gap-4 md:gap-6">
-            <a
-              href="https://ironsignalworks.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="uppercase text-[#769a75] hover:text-[#00FF5A] transition-colors"
-              style={{
-                fontSize: '0.65rem',
-                fontWeight: 600,
-                letterSpacing: '0.1em',
-              }}
-            >
-              Site by Iron Signal Works
+              <button className="bg-[#00C747] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#131e13]">Join</button>
+            </form>
+            <a href="mailto:selvajariarecords@gmail.com" className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-[#769a75] hover:text-[#00C747]">
+              <Mail className="h-4 w-4" /> Email
             </a>
-            <button
-              onClick={() => onNavigate('privacy')}
-              className="uppercase text-[#769a75] hover:text-[#00FF5A] transition-colors"
-              style={{
-                fontSize: '0.65rem',
-                fontWeight: 600,
-                letterSpacing: '0.1em',
-                background: 'none',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer'
-              }}
-            >
-              Privacy
-            </button>
-            <button
-              onClick={() => onNavigate('terms')}
-              className="uppercase text-[#769a75] hover:text-[#00FF5A] transition-colors"
-              style={{
-                fontSize: '0.65rem',
-                fontWeight: 600,
-                letterSpacing: '0.1em',
-                background: 'none',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer'
-              }}
-            >
-              Terms
-            </button>
-            <button
-              onClick={() => onNavigate('shipping')}
-              className="uppercase text-[#769a75] hover:text-[#00FF5A] transition-colors"
-              style={{
-                fontSize: '0.65rem',
-                fontWeight: 600,
-                letterSpacing: '0.1em',
-                background: 'none',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer'
-              }}
-            >
-              Shipping
-            </button>
           </div>
         </div>
 
-        {/* Hazard footer decoration */}
-        <div className="mt-8 h-1 flex">
-          {Array.from({ length: 60 }).map((_, i) => (
-            <div 
-              key={i}
-              className={i % 2 === 0 ? 'bg-[#00FF5A]/20' : 'bg-transparent'}
-              style={{ flex: 1 }}
-            />
-          ))}
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-[#769a75]/25 pt-6 text-[10px] uppercase tracking-[0.2em] text-[#769a75] md:flex-row">
+          <p>© 2026 Selvajaria Records. All rights reserved.</p>
+          <a href="https://ironsignalworks.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#00C747]">
+            Site by Iron Signal Works
+          </a>
         </div>
       </div>
     </footer>
   );
 }
+
