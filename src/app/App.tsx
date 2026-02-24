@@ -10,7 +10,7 @@ import SubpageContent from './components/SubpageContent';
 import type { SubpageKey } from './components/SubpageContent';
 import type { CartItem, CartItemInput } from './components/SubpageContent';
 import { Toaster, toast } from 'sonner';
-import { ChevronUp, HandMetal } from 'lucide-react';
+import { ChevronUp, HandMetal, Search, X } from 'lucide-react';
 
 type AppPage = 'releases' | 'search' | SubpageKey;
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
@@ -116,7 +116,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative isolate min-h-screen overflow-x-hidden bg-[#050805] pt-24 md:pt-44">
+    <div className="relative isolate min-h-screen overflow-x-hidden bg-[#050805] pt-40 md:pt-44">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-[#131e13] focus:px-4 focus:py-2 focus:text-[#f4fbf3] focus:outline focus:outline-2 focus:outline-[#00C747]"
@@ -301,7 +301,7 @@ export default function App() {
           />
           <aside className="search-panel fixed right-0 top-0 z-[110] h-screen w-full max-w-[560px] overflow-y-auto bg-[#050805] text-[#f4fbf3] shadow-2xl">
             <div className="flex items-center gap-3 border-b border-[#769a75]/35 px-5 py-4">
-              <span className="text-2xl">âŒ•</span>
+              <Search className="h-6 w-6 text-[#f4fbf3]" />
               <input
                 type="search"
                 value={searchQuery}
@@ -313,10 +313,10 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setSearchPanelOpen(false)}
-                className="text-3xl leading-none text-[#b7c8b5] hover:text-[#f4fbf3]"
+                className="text-[#b7c8b5] hover:text-[#f4fbf3]"
                 aria-label="Close search panel"
               >
-                Ã—
+                <X className="h-7 w-7" />
               </button>
             </div>
 
