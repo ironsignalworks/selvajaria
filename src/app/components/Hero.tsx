@@ -81,7 +81,7 @@ export default function Hero({ onEnterStore }: HeroProps) {
       className="relative min-h-[78vh] overflow-hidden bg-transparent"
     >
       <div className="absolute inset-0 opacity-15 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(#00ff5a_1px,transparent_1px)] [background-size:28px_28px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(#00C747_1px,transparent_1px)] [background-size:28px_28px]" />
       </div>
 
       <div className="container relative z-10 mx-auto px-4 pt-[50px] pb-16 sm:pt-[58px] sm:pb-10">
@@ -117,12 +117,12 @@ export default function Hero({ onEnterStore }: HeroProps) {
 
           <div className="relative w-full max-w-[34rem] justify-self-center text-left min-h-[19rem] -translate-y-2 sm:min-h-[21rem] sm:-translate-y-2 lg:justify-self-start lg:-translate-y-3">
             <div key={`hero-copy-${heroIndex}`} className="hero-copy-in">
-              <div className="mb-2 inline-flex border border-[#00FF5A] bg-[#00FF5A] px-3 py-1 font-display text-[10px] font-bold uppercase tracking-[0.12em] text-[#131e13]">
+              <div className="mb-2 inline-flex border border-[#00C747] bg-[#00C747] px-3 py-1 font-display text-[10px] font-bold uppercase tracking-[0.12em] text-[#131e13]">
                 New Release Alert
               </div>
               <h2 className="min-h-[7.75rem] font-display text-5xl font-bold uppercase leading-[0.95] tracking-tight text-[#f4fbf3] sm:min-h-[11rem] sm:text-7xl">
                 {current.artist}
-                <span className="block text-[#00FF5A]">{current.title}</span>
+                <span className="block text-[#00C747]">{current.title}</span>
               </h2>
               <p className="mt-2 min-h-[3.5rem] max-w-xl text-lg font-medium leading-relaxed text-[#769a75] sm:text-xl">
                 {current.line}
@@ -131,14 +131,14 @@ export default function Hero({ onEnterStore }: HeroProps) {
                 <button
                   type="button"
                   onClick={openCurrentRelease}
-                  className="border-2 border-[#769a75] bg-[#131e13] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#f4fbf3] hover:border-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
+                  className="border-2 border-[#769a75] bg-[#131e13] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#f4fbf3] hover:border-[#00C747] hover:bg-[#00C747] hover:text-[#131e13]"
                 >
                   View Release
                 </button>
                 <button
                   type="button"
                   onClick={onEnterStore}
-                  className="border-2 border-[#00FF5A] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
+                  className="border-2 border-[#00C747] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#00C747] hover:bg-[#00C747] hover:text-[#131e13]"
                 >
                   Enter Store
                 </button>
@@ -152,7 +152,7 @@ export default function Hero({ onEnterStore }: HeroProps) {
                   onClick={() => setHeroIndex(index)}
                   aria-label={`Show hero release ${index + 1}`}
                   aria-pressed={heroIndex === index}
-                  className={`h-2.5 w-8 transition-all ${heroIndex === index ? 'bg-[#00FF5A]' : 'bg-[#769a75]/60 hover:bg-[#9bc49a]'}`}
+                  className={`h-2.5 w-8 transition-all ${heroIndex === index ? 'bg-[#00C747]' : 'bg-[#769a75]/60 hover:bg-[#769a75]'}`}
                 />
               ))}
             </div>
@@ -164,7 +164,7 @@ export default function Hero({ onEnterStore }: HeroProps) {
         {Array.from({ length: 40 }).map((_, i) => (
           <div 
             key={i}
-            className={i % 2 === 0 ? 'bg-[#00FF5A]/18' : 'bg-transparent'}
+            className={i % 2 === 0 ? 'bg-[#00C747]/18' : 'bg-transparent'}
             style={{ flex: 1 }}
           />
         ))}

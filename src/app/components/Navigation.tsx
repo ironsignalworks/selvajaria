@@ -88,7 +88,7 @@ export default function Navigation({
 
           <div className="relative col-start-2 mt-0 flex items-center justify-center">
             <div className="w-full max-w-[520px]">
-              <p className="mb-2 text-center text-[1.02rem] font-bold uppercase tracking-[0.1em] text-[#d9f7d8]">
+              <p className="mb-2 text-center text-[1.02rem] font-bold uppercase tracking-[0.1em] text-[#b7c8b5]">
                 SELVAJARIA RECORDS - Underground label & distro
               </p>
               <form
@@ -108,7 +108,7 @@ export default function Navigation({
                   onFocus={onSearchFocus}
                   placeholder="looking for something?"
                   aria-label="Search releases"
-                  className="w-full bg-transparent text-base font-medium leading-none text-[#e4efe2] placeholder:text-[#9eb39c] focus:outline-none"
+                  className="w-full bg-transparent text-base font-medium leading-none text-[#f4fbf3] placeholder:text-[#769a75] focus:outline-none"
                 />
               </form>
             </div>
@@ -155,16 +155,27 @@ export default function Navigation({
         </div>
 
         <div className="py-2 md:hidden">
-          <div className="flex items-center justify-between">
-            <button onClick={handleLogoClick} aria-label="Go to home releases page">
-                                                                                                                                                                                                          <img
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center">
+            <div className="flex items-center justify-start">
+              <button
+                onClick={() => setMobileOpen((prev) => !prev)}
+                className="p-2 text-[#f4fbf3]"
+                aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                aria-expanded={mobileOpen}
+                aria-controls="mobile-primary-nav"
+              >
+                {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
+            <button onClick={handleLogoClick} aria-label="Go to home releases page" className="justify-self-center">
+              <img
                 src={asset('/logo3.png')}
                 alt="Selvajaria Records"
                 className="h-11 w-auto object-contain"
               />
             </button>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-end">
               <button
                 onClick={() => {
                   onNavigate('cart');
@@ -178,24 +189,11 @@ export default function Navigation({
                   {cartCount}
                 </span>
               </button>
-
-              <button
-                onClick={() => setMobileOpen((prev) => !prev)}
-                className="p-2 text-[#f4fbf3]"
-                aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-                aria-expanded={mobileOpen}
-                aria-controls="mobile-primary-nav"
-              >
-                {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
             </div>
           </div>
 
           <p className="mt-2 text-center font-display text-xs font-bold uppercase tracking-[0.1em] text-[#00C747]">
             Ripping ears apart since 2022.
-          </p>
-          <p className="mt-2 text-center text-[0.94rem] font-bold uppercase tracking-[0.1em] text-[#d9f7d8]">
-            SELVAJARIA RECORDS - Underground label & distro
           </p>
           <form
             onSubmit={(event) => {
@@ -214,7 +212,7 @@ export default function Navigation({
               onFocus={onSearchFocus}
               placeholder="looking for something?"
               aria-label="Search releases"
-              className="w-full bg-transparent text-[0.95rem] font-medium leading-none text-[#e4efe2] placeholder:text-[#9eb39c] focus:outline-none"
+              className="w-full bg-transparent text-[0.95rem] font-medium leading-none text-[#f4fbf3] placeholder:text-[#769a75] focus:outline-none"
             />
           </form>
         </div>
@@ -249,7 +247,7 @@ export default function Navigation({
         )}
       </div>
       <div
-        className={`nav-voucher-drop-in -mt-5 origin-top overflow-hidden border-t border-[#769a75]/35 bg-[#00C747]/28 px-4 text-center transition-[max-height,opacity,transform,padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`nav-voucher-drop-in mt-0 md:-mt-5 origin-top overflow-hidden border-t border-[#769a75]/35 bg-[#00C747]/28 px-4 text-center transition-[max-height,opacity,transform,padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           hideVoucherBanner
             ? 'pointer-events-none max-h-0 -translate-y-1 scale-y-75 py-0 opacity-0'
             : 'max-h-20 translate-y-0 scale-y-100 py-3 opacity-100'

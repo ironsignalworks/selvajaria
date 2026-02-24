@@ -216,7 +216,7 @@
 }
 
 .brutalist-shadow {
-  box-shadow: 4px 4px 0 0 rgba(0, 255, 90, 0.22);
+  box-shadow: 4px 4px 0 0 rgba(0, 199, 71, 0.22);
 }
 
 .brutalist-shadow-hover {
@@ -224,7 +224,7 @@
 }
 
 .brutalist-shadow-hover:hover {
-  box-shadow: 2px 2px 0 0 rgba(0, 255, 90, 0.3);
+  box-shadow: 2px 2px 0 0 rgba(0, 199, 71, 0.3);
   transform: translate(1px, 1px);
 }
 

@@ -137,7 +137,7 @@
   transform: translateY(-30px);
   color: transparent;
   background-image:
-    linear-gradient(180deg, #f4fff6 0%, #00ff5a 58%, #0b9c44 100%),
+    linear-gradient(180deg, #f4fbf3 0%, #00c747 58%, #769a75 100%),
     repeating-linear-gradient(
       105deg,
       rgba(255, 255, 255, 0.22) 0 2px,
@@ -148,7 +148,7 @@
   background-clip: text;
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.25),
-    0 3px 10px rgba(0, 255, 90, 0.28),
+    0 3px 10px rgba(0, 199, 71, 0.28),
     0 0 1px rgba(0, 0, 0, 0.7);
   filter: contrast(1.08) saturate(1.12);
   animation: heroTaglineDripIn 620ms cubic-bezier(0.2, 0.9, 0.2, 1);
@@ -158,7 +158,7 @@
   content: attr(data-text);
   position: absolute;
   inset: 0;
-  color: rgba(0, 255, 90, 0.2);
+  color: rgba(0, 199, 71, 0.2);
   transform: translate(1px, 1px);
   mix-blend-mode: screen;
   pointer-events: none;
