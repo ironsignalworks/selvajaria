@@ -148,6 +148,7 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+
 const contactLinks = [
   { label: 'Email', href: 'mailto:selvajariarecords@gmail.com', value: 'selvajariarecords@gmail.com' },
   { label: 'Bandcamp', href: 'https://selvajariarecords.bandcamp.com/', value: 'selvajariarecords.bandcamp.com' },
+  { label: 'Discogs', href: 'https://www.discogs.com/label/2788133-Selvajaria-Records', value: 'discogs.com/label/2788133-Selvajaria-Records' },
   { label: 'Instagram', href: 'https://www.instagram.com/selvajaria_records/', value: '@selvajaria_records' },
   { label: 'Facebook', href: 'https://www.facebook.com/selvajariarecords/', value: 'facebook.com/selvajariarecords' },
   { label: 'YouTube', href: 'https://www.youtube.com/@SelvajariaRecords', value: '@SelvajariaRecords' },
