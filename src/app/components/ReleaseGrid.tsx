@@ -809,7 +809,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
 
               <div className="flex min-h-0 flex-col">
                 <div className="border-b border-[#769a75]/25 p-4 sm:px-6 sm:py-4">
-                  <div className="flex flex-col gap-2 sm:flex-row">
+                  <div className="mx-auto flex w-full max-w-[740px] flex-col gap-2 sm:flex-row">
                     <button
                       onClick={() => addReleaseToCart(detailModalRelease)}
                       className="flex-1 border border-[#769a75]/70 px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-[#f4fbf3] transition-colors hover:border-[#00C747] hover:text-[#00C747]"
