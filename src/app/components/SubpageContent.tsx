@@ -106,14 +106,14 @@ const distroItems: DistroItem[] = [
   { id: 'catachrest-target-of-ruin', name: 'Target of Ruin', artist: 'Catachrest', image: '/catachrest.jpg', format: 'CD', price: 12, listeningUrl: 'https://selvajariarecords.bandcamp.com/' },
   { id: 'poison-the-preacher-vs-the-world', name: 'VS the World', artist: 'Poison the Preacher', image: '/poisonthepreacher.jpg', format: 'CD', price: 12, listeningUrl: 'https://selvajariarecords.bandcamp.com/' },
   { id: 'biolence-violent-obliteration', name: 'Violent Obliteration', artist: 'Biolence', image: '/biolence.jpg', format: 'CD', price: 12 },
-  { id: 'dfc-sequencia-brutal', name: 'SequÃªncia Brutal de Estaladas e Biqueirada', artist: 'D.F.C.', image: '/dfc.jpg', format: 'CD', price: 12 },
+  { id: 'dfc-sequencia-brutal', name: 'Sequência Brutal de Estaladas e Biqueirada', artist: 'D.F.C.', image: '/dfc.jpg', format: 'CD', price: 12 },
   { id: 'psycho-mosher-madness-vortex', name: 'Trapped Into The Madness Vortex', artist: 'Psycho Mosher', image: '/psychomosher.jpg', format: 'CD', price: 12 },
   { id: 'raging-slayer-catatonic-symphony', name: 'Catatonic Symphony', artist: 'Raging Slayer', image: '/raging slayer capa.jpg', format: 'CD', price: 12 },
   { id: 'spoiled-collapse', name: 'Collapse', artist: 'Spoiled', image: '/spoiled.jpg', format: 'CD', price: 12 },
   { id: 'dekapited-destruccion-trascendental', name: 'Destruccion Trascendental', artist: 'Dekapited', image: '/dekapited.jpg', format: 'CD', price: 12 },
   { id: 'tvmvlo-portal-of-terror', name: 'Portal of Terror', artist: 'Tvmvlo', image: '/tvmvlo.jpg', format: 'CD', price: 12 },
   { id: 'deathlike-stab-knife-murders', name: 'Knife Murders', artist: 'Deathlike Stab', image: '/deathlike capa.jpg', format: 'CD', price: 12 },
-  { id: 'animalesco-o-metodo', name: 'Animalesco, O MÃ©todo', artist: 'Animalesco, o MÃ©todo', image: '/animalesco.jpg', format: 'LP', price: 22 },
+  { id: 'animalesco-o-metodo', name: 'Animalesco, O Método', artist: 'Animalesco, o Método', image: '/animalesco.jpg', format: 'LP', price: 22 },
 ];
 
 interface MerchItem {
