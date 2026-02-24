@@ -86,8 +86,11 @@ export default function Navigation({
             </p>
           </div>
 
-          <div className="relative col-start-2 mt-[30px] flex items-center justify-center">
+          <div className="relative col-start-2 mt-0 flex items-center justify-center">
             <div className="w-full max-w-[520px]">
+              <p className="mb-2 text-center text-[1.02rem] font-bold uppercase tracking-[0.1em] text-[#d9f7d8]">
+                SELVAJARIA RECORDS - Underground label & distro
+              </p>
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
@@ -190,6 +193,9 @@ export default function Navigation({
 
           <p className="mt-2 text-center font-display text-xs font-bold uppercase tracking-[0.1em] text-[#00C747]">
             Ripping ears apart since 2022.
+          </p>
+          <p className="mt-2 text-center text-[0.94rem] font-bold uppercase tracking-[0.1em] text-[#d9f7d8]">
+            SELVAJARIA RECORDS - Underground label & distro
           </p>
           <form
             onSubmit={(event) => {

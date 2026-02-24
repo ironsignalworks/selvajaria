@@ -91,9 +91,6 @@ export default function Hero({ onEnterStore }: HeroProps) {
             alt="Selvajaria Records"
             className="h-[22.5rem] w-auto object-contain sm:h-[17.2rem] lg:h-[19.8rem]"
           />
-          <p className="-mt-[50px] text-[1.12rem] font-bold uppercase tracking-[0.1em] text-[#d9f7d8] sm:mt-1 sm:text-[1.28rem] lg:mt-6">
-            SELVAJARIA RECORDS - Underground label & distro
-          </p>
         </div>
         <div className="mx-auto grid max-w-5xl grid-cols-1 items-center justify-items-center gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
           <div
