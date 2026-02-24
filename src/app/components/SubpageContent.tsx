@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import FilterSidebar from './FilterSidebar';
+import type { CatalogFilters } from './FilterSidebar';
 import DistroGrid from './DistributionGrid';
 import { Mail, Instagram, Facebook, Youtube, Disc3, type LucideIcon } from 'lucide-react';
 
@@ -115,6 +116,26 @@ const distroItems: DistroItem[] = [
   { id: 'deathlike-stab-knife-murders', name: 'Knife Murders', artist: 'Deathlike Stab', image: '/deathlike capa.jpg', format: 'CD', price: 12 },
   { id: 'animalesco-o-metodo', name: 'Animalesco, O Método', artist: 'Animalesco, o Método', image: '/animalesco.jpg', format: 'LP', price: 22 },
 ];
+const EMPTY_DISTRO_FILTERS: CatalogFilters = {
+  formats: [],
+  genres: [],
+  countries: [],
+  inStockOnly: false,
+};
+const DISTRO_FILTER_METADATA: Record<string, { genre: string; country: string; inStock?: boolean }> = {
+  'fatal-exposure-bikini-atoll-broadcast': { genre: 'thrash', country: 'portugal', inStock: true },
+  'catachrest-target-of-ruin': { genre: 'thrash', country: 'portugal', inStock: true },
+  'poison-the-preacher-vs-the-world': { genre: 'thrash', country: 'portugal', inStock: true },
+  'biolence-violent-obliteration': { genre: 'death', country: 'brazil', inStock: true },
+  'dfc-sequencia-brutal': { genre: 'thrash', country: 'brazil', inStock: true },
+  'psycho-mosher-madness-vortex': { genre: 'thrash', country: 'portugal', inStock: true },
+  'raging-slayer-catatonic-symphony': { genre: 'heavy', country: 'spain', inStock: true },
+  'spoiled-collapse': { genre: 'death', country: 'portugal', inStock: true },
+  'dekapited-destruccion-trascendental': { genre: 'death', country: 'spain', inStock: true },
+  'tvmvlo-portal-of-terror': { genre: 'black', country: 'portugal', inStock: true },
+  'deathlike-stab-knife-murders': { genre: 'death', country: 'brazil', inStock: true },
+  'animalesco-o-metodo': { genre: 'heavy', country: 'worldwide', inStock: true },
+};
 
 interface MerchItem {
   id: string;
@@ -183,6 +204,7 @@ export default function SubpageContent({
   const [detailMerch, setDetailMerch] = useState<MerchItem | null>(null);
   const [isMerchImageLarge, setIsMerchImageLarge] = useState(false);
   const [mobileDistroFiltersOpen, setMobileDistroFiltersOpen] = useState(false);
+  const [distroFilters, setDistroFilters] = useState<CatalogFilters>(EMPTY_DISTRO_FILTERS);
   const [shippingZone, setShippingZone] = useState<1 | 2 | 3 | 4>(1);
   const useCatalogStyleHeader = page === 'distro' || page === 'merch' || page === 'contacto';
   const totalItemCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
@@ -190,6 +212,22 @@ export default function SubpageContent({
   const extraItemShipping = Math.floor(totalItemCount / 4) * 2;
   const shippingFee = cartItems.length > 0 ? 8 + (shippingZone - 1) * 2 + extraItemShipping : 0;
   const cartTotal = cartSubtotal + shippingFee;
+  const filteredDistroItems = distroItems.filter((item) => {
+    const meta = DISTRO_FILTER_METADATA[item.id];
+    const formatTag = item.format.toLowerCase();
+    const normalizedFormat = formatTag === 'lp' ? 'vinyl' : formatTag;
+    const genreTag = meta?.genre ?? '';
+    const countryTag = meta?.country ?? '';
+
+    const matchesFormat =
+      distroFilters.formats.length === 0 ||
+      distroFilters.formats.some((format) => formatTag.includes(format) || normalizedFormat.includes(format));
+    const matchesGenre = distroFilters.genres.length === 0 || distroFilters.genres.includes(genreTag);
+    const matchesCountry = distroFilters.countries.length === 0 || distroFilters.countries.includes(countryTag);
+    const matchesStock = !distroFilters.inStockOnly || (meta?.inStock ?? true);
+
+    return matchesFormat && matchesGenre && matchesCountry && matchesStock;
+  });
 
   return (
     <main id="main-content" className="container mx-auto px-4 py-12">
@@ -243,13 +281,13 @@ export default function SubpageContent({
             </button>
           </div>
           <div className={`${mobileDistroFiltersOpen ? 'block' : 'hidden lg:block'}`}>
-            <FilterSidebar />
+            <FilterSidebar value={distroFilters} onChange={setDistroFilters} />
           </div>
 
           <div className="flex-1 rounded-sm border border-[#769a75]/50 bg-[#101910c7] p-3">
             {/* Distribution grid â€” same card style as releases but smaller thumbs and more items */}
             <DistroGrid
-              items={distroItems}
+              items={filteredDistroItems}
               onAddToCart={(item) =>
                 onAddToCart({ id: item.id, name: item.name, artist: item.artist, format: item.format, price: item.price, image: item.image })
               }

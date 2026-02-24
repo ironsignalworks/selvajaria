@@ -33,7 +33,7 @@ export default function Navigation({
   const goToHeroReleases = () => {
     onNavigate('releases');
     requestAnimationFrame(() => {
-      document.getElementById('hero-releases')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('hero-pics')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   };
   const handleLogoClick = () => {

@@ -96,7 +96,11 @@ export default function Hero({ onEnterStore }: HeroProps) {
           </p>
         </div>
         <div className="mx-auto grid max-w-5xl grid-cols-1 items-center justify-items-center gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
-          <div className="relative mx-auto w-full max-w-[28rem] sm:max-w-[30rem]">
+          <div
+            id="hero-pics"
+            className="relative mx-auto w-full max-w-[28rem] scroll-mt-40 sm:max-w-[30rem]"
+            style={{ boxShadow: '0 0 28px rgba(0, 199, 71, 0.28)' }}
+          >
             <div className="relative aspect-square overflow-hidden bg-transparent">
               <button
                 type="button"
