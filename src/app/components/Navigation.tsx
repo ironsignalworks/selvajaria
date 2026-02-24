@@ -30,6 +30,7 @@ export default function Navigation({
   onSearchFocus,
 }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [hideVoucherBanner, setHideVoucherBanner] = useState(false);
   const goToHeroReleases = () => {
     onNavigate('releases');
     requestAnimationFrame(() => {
@@ -45,6 +46,16 @@ export default function Navigation({
     setMobileOpen(false);
   }, [activePage]);
 
+  useEffect(() => {
+    const onScroll = () => {
+      setHideVoucherBanner(window.scrollY > 8);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const menuItems: MenuItem[] = [
     { label: 'Out Now!', page: 'releases' },
     { label: 'Distribution', page: 'distro' },
@@ -56,26 +67,26 @@ export default function Navigation({
     <nav className="fixed top-0 left-0 right-0 z-50 border-b-0 bg-[#0b120b]/95 backdrop-blur-sm" aria-label="Primary">
       <div className="container mx-auto px-6 lg:px-8">
         <div className="hidden md:grid grid-cols-[240px_minmax(0,1fr)_240px] grid-rows-[auto_auto] items-center gap-x-8 gap-y-1 py-2">
-          <button
-            onClick={handleLogoClick}
-            className="relative flex items-center justify-start self-start"
-            aria-label="Go to home releases page"
-          >
-            <div className="relative h-[92px] w-[180px]">
-              <img
-                src={asset('/logo3.png')}
-                alt="Selvajaria Records"
-                className="h-full w-full object-contain object-center"
-              />
-            </div>
-          </button>
-          <div className="col-start-1 row-start-2 h-0">
+          <div className="col-start-1 row-span-2 flex flex-col items-center justify-center gap-1 pt-2 text-center">
+            <button
+              onClick={handleLogoClick}
+              className="relative flex items-center justify-center"
+              aria-label="Go to home releases page"
+            >
+              <div className="relative h-[92px] w-[180px]">
+                <img
+                  src={asset('/logo3.png')}
+                  alt="Selvajaria Records"
+                  className="h-full w-full object-contain object-center"
+                />
+              </div>
+            </button>
             <p className="whitespace-nowrap font-display text-xs font-bold uppercase tracking-[0.1em] text-[#00C747]">
               Ripping ears apart since 2022
             </p>
           </div>
 
-          <div className="relative col-start-2 flex items-center justify-center">
+          <div className="relative col-start-2 mt-[30px] flex items-center justify-center">
             <div className="w-full max-w-[520px]">
               <form
                 onSubmit={(event) => {
@@ -100,7 +111,7 @@ export default function Navigation({
             </div>
           </div>
 
-          <div className="col-start-3 flex items-start justify-end text-[#f4fbf3]">
+          <div className="col-start-3 mt-[30px] flex items-start justify-center text-[#f4fbf3]">
             <div className="flex items-center gap-4">
               <button className="inline-flex items-center gap-1 text-lg hover:text-[#00C747]">
                 English <ChevronDown className="h-4 w-4" />
@@ -121,7 +132,7 @@ export default function Navigation({
             </div>
           </div>
 
-          <div className="col-span-3 flex items-center justify-center -translate-y-3 pb-0">
+          <div className="col-span-3 flex items-center justify-center -translate-y-8 pb-0">
             <div className="flex items-center justify-center gap-7">
             {menuItems.map((item) => (
               <button
@@ -177,7 +188,7 @@ export default function Navigation({
             </div>
           </div>
 
-          <p className="mt-2 text-left font-display text-xs font-bold uppercase tracking-[0.1em] text-[#00C747]">
+          <p className="mt-2 text-center font-display text-xs font-bold uppercase tracking-[0.1em] text-[#00C747]">
             Ripping ears apart since 2022.
           </p>
           <form
@@ -231,7 +242,13 @@ export default function Navigation({
           </div>
         )}
       </div>
-      <div className="nav-voucher-drop-in border-t border-[#769a75]/35 bg-[#00C747]/28 px-4 py-3 text-center">
+      <div
+        className={`nav-voucher-drop-in -mt-5 origin-top overflow-hidden border-t border-[#769a75]/35 bg-[#00C747]/28 px-4 text-center transition-[max-height,opacity,transform,padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          hideVoucherBanner
+            ? 'pointer-events-none max-h-0 -translate-y-1 scale-y-75 py-0 opacity-0'
+            : 'max-h-20 translate-y-0 scale-y-100 py-3 opacity-100'
+        }`}
+      >
         <div className="flex items-center justify-center gap-3">
           <p className="font-display text-xs font-bold uppercase tracking-[0.12em] text-[#00C747] sm:text-sm">
             Claim your Selvajaria release party voucher of 5 euros
