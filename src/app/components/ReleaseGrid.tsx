@@ -689,11 +689,11 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
               </div>
 
               <div className="mt-2 bg-[#101910]/92 p-4 sm:p-5">
-                <div className="mb-1 uppercase text-[0.95rem] font-extrabold leading-none tracking-[0.06em] text-[#00C747]">
+                <div className="mb-1 uppercase text-[1.08rem] font-extrabold leading-none tracking-[0.06em] text-[#00C747] sm:text-[1.15rem]">
                   {release.artist}
                 </div>
 
-                <div className="mb-3 min-h-[2.35rem] text-[0.8rem] font-semibold uppercase leading-tight tracking-[0.05em] text-[#f4fbf3]">
+                <div className="mb-3 min-h-[2.55rem] text-[0.9rem] font-semibold uppercase leading-tight tracking-[0.05em] text-[#f4fbf3] sm:text-[0.98rem]">
                   {release.title}
                 </div>
 
@@ -757,14 +757,14 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
 
       {detailModalRelease && (
         <div
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-[#050805]/92 p-4 backdrop-blur-[2px] sm:p-6"
+          className="fixed inset-0 z-[95] flex items-start justify-center overflow-y-auto bg-[#050805]/92 p-3 backdrop-blur-[2px] sm:items-center sm:p-6"
           onClick={closeReleaseDetails}
           role="dialog"
           aria-modal="true"
           aria-label={`Release details for ${detailModalRelease.artist} ${detailModalRelease.title}`}
         >
           <div
-            className="flex max-h-[84vh] w-full max-w-4xl flex-col overflow-hidden rounded-sm border-2 border-[#769a75]/60 bg-[#101910]"
+            className="my-2 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-4xl flex-col overflow-y-auto rounded-sm border-2 border-[#769a75]/60 bg-[#101910] sm:my-0 sm:max-h-[84vh] sm:overflow-hidden"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4 border-b border-[#769a75]/30 px-4 py-3 sm:px-6">
@@ -808,7 +808,30 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
               </div>
 
               <div className="flex min-h-0 flex-col">
-                <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-4 sm:px-6">
+                <div className="border-b border-[#769a75]/25 p-4 sm:px-6 sm:py-4">
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <button
+                      onClick={() => addReleaseToCart(detailModalRelease)}
+                      className="flex-1 border border-[#769a75]/70 px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-[#f4fbf3] transition-colors hover:border-[#00C747] hover:text-[#00C747]"
+                    >
+                      Add To Cart
+                    </button>
+                    <a
+                      href={detailModalRelease.listeningUrl ?? DEFAULT_LISTEN_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex flex-1 items-center justify-center gap-2 border border-[#00C747]/70 bg-[#00C747] px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-[#131e13] transition-all hover:bg-[#00C747]/90"
+                    >
+                      <Play className="h-3 w-3" />
+                      Listen
+                    </a>
+                  </div>
+                </div>
+
+                <div
+                  className="min-h-0 flex-1 space-y-5 px-4 py-4 sm:overflow-y-auto sm:overscroll-contain sm:px-6"
+                  style={{ WebkitOverflowScrolling: 'touch' }}
+                >
                   <div>
                     <p className="text-[0.74rem] font-bold uppercase tracking-[0.12em] text-[#00C747]">Description</p>
                     <p className="mt-2 text-[0.98rem] leading-relaxed text-[#b7c8b5]">
@@ -833,25 +856,6 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
                   </div>
                 </div>
 
-                <div className="border-t border-[#769a75]/25 p-4 sm:px-6 sm:py-4">
-                  <div className="flex flex-col gap-2 sm:flex-row">
-                    <button
-                      onClick={() => addReleaseToCart(detailModalRelease)}
-                      className="flex-1 border border-[#769a75]/70 px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-[#f4fbf3] transition-colors hover:border-[#00C747] hover:text-[#00C747]"
-                    >
-                      Add To Cart
-                    </button>
-                    <a
-                      href={detailModalRelease.listeningUrl ?? DEFAULT_LISTEN_URL}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex flex-1 items-center justify-center gap-2 border border-[#00C747]/70 bg-[#00C747] px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.1em] text-[#131e13] transition-all hover:bg-[#00C747]/90"
-                    >
-                      <Play className="h-3 w-3" />
-                      Listen
-                    </a>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

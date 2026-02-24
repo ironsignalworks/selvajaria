@@ -84,14 +84,14 @@ export default function Hero({ onEnterStore }: HeroProps) {
         <div className="absolute inset-0 bg-[radial-gradient(#00ff5a_1px,transparent_1px)] [background-size:28px_28px]" />
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 pt-8 pb-16 sm:pt-10 sm:pb-20">
-        <div className="mx-auto mb-8 flex max-w-5xl flex-col items-center text-center lg:mb-10">
+      <div className="container relative z-10 mx-auto px-4 pt-[53px] pb-16 sm:pt-[61px] sm:pb-10">
+        <div className="mx-auto mb-12 flex max-w-5xl flex-col items-center text-center lg:mb-[100px]">
           <img
             src={asset('/logo3.png')}
             alt="Selvajaria Records"
-            className="h-48 w-auto object-contain sm:h-56 lg:h-64"
+            className="h-[24.192rem] w-auto object-contain sm:h-[16.8rem] lg:h-[19.2rem]"
           />
-          <p className="mt-3 text-xl font-semibold uppercase tracking-[0.1em] text-[#769a75] sm:text-2xl">
+          <p className="-mt-8 text-xl font-bold uppercase tracking-[0.12em] text-[#d9f7d8] sm:mt-0.5 sm:text-2xl">
             SELVAJARIA RECORDS - Underground label & distro
           </p>
         </div>

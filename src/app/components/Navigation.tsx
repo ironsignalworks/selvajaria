@@ -76,13 +76,13 @@ export default function Navigation({
           </div>
 
           <div className="relative col-start-2 flex items-center justify-center">
-            <div className="w-full max-w-[680px]">
+            <div className="w-full max-w-[520px]">
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
                   onSearchSubmit();
                 }}
-                className="flex items-center gap-2 rounded-sm border border-[#769a75]/70 bg-[#f4fbf3] px-3 py-2 text-[#131e13]"
+                className="flex items-center gap-2 rounded-sm border border-[#769a75]/45 bg-[#101910]/82 px-3 py-2 text-[#b7c8b5] transition-colors hover:border-[#769a75]/70 focus-within:border-[#00C747]/70"
               >
                 <button type="submit" aria-label="Search releases">
                   <Search className="h-4 w-4" />
@@ -94,7 +94,7 @@ export default function Navigation({
                   onFocus={onSearchFocus}
                   placeholder="looking for something?"
                   aria-label="Search releases"
-                  className="w-full bg-transparent text-xl font-medium leading-none text-[#131e13] placeholder:text-[#131e13]/70 focus:outline-none"
+                  className="w-full bg-transparent text-base font-medium leading-none text-[#e4efe2] placeholder:text-[#9eb39c] focus:outline-none"
                 />
               </form>
             </div>
@@ -185,7 +185,7 @@ export default function Navigation({
               event.preventDefault();
               onSearchSubmit();
             }}
-            className="mt-2.5 flex items-center gap-2 border border-[#769a75]/60 bg-[#f4fbf3] px-3 py-2 text-[#131e13]"
+            className="mt-2.5 flex items-center gap-2 border border-[#769a75]/55 bg-[#101910]/88 px-3 py-2 text-[#b7c8b5]"
           >
             <button type="submit" aria-label="Search releases">
               <Search className="h-4 w-4" />
@@ -197,7 +197,7 @@ export default function Navigation({
               onFocus={onSearchFocus}
               placeholder="looking for something?"
               aria-label="Search releases"
-              className="w-full bg-transparent text-base font-medium leading-none text-[#131e13] placeholder:text-[#131e13]/70 focus:outline-none"
+              className="w-full bg-transparent text-[0.95rem] font-medium leading-none text-[#e4efe2] placeholder:text-[#9eb39c] focus:outline-none"
             />
           </form>
         </div>
