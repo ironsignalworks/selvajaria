@@ -84,18 +84,18 @@ export default function Hero({ onEnterStore }: HeroProps) {
         <div className="absolute inset-0 bg-[radial-gradient(#00ff5a_1px,transparent_1px)] [background-size:28px_28px]" />
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 pt-[53px] pb-16 sm:pt-[61px] sm:pb-10">
-        <div className="mx-auto mb-12 flex max-w-5xl flex-col items-center text-center lg:mb-[100px]">
+      <div className="container relative z-10 mx-auto px-4 pt-[50px] pb-16 sm:pt-[58px] sm:pb-10">
+        <div className="mx-auto mb-12 flex max-w-5xl flex-col items-center text-center lg:mb-[88px]">
           <img
             src={asset('/logo3.png')}
             alt="Selvajaria Records"
-            className="h-[24.192rem] w-auto object-contain sm:h-[16.8rem] lg:h-[19.2rem]"
+            className="h-[22.5rem] w-auto object-contain sm:h-[17.2rem] lg:h-[19.8rem]"
           />
-          <p className="-mt-8 text-xl font-bold uppercase tracking-[0.12em] text-[#d9f7d8] sm:mt-0.5 lg:mt-[20px] sm:text-2xl">
+          <p className="-mt-[50px] text-[1.12rem] font-bold uppercase tracking-[0.1em] text-[#d9f7d8] sm:mt-1 sm:text-[1.28rem] lg:mt-6">
             SELVAJARIA RECORDS - Underground label & distro
           </p>
         </div>
-        <div className="mx-auto grid max-w-5xl grid-cols-1 items-center justify-items-center gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-2">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 items-center justify-items-center gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
           <div className="relative mx-auto w-full max-w-[28rem] sm:max-w-[30rem]">
             <div className="relative aspect-square overflow-hidden bg-transparent">
               <button

@@ -689,11 +689,11 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
               </div>
 
               <div className="mt-2 bg-[#101910]/92 p-4 sm:p-5">
-                <div className="mb-1 uppercase text-[1.08rem] font-extrabold leading-none tracking-[0.06em] text-[#00C747] sm:text-[1.15rem]">
+                <div className="mb-1 uppercase text-[1.02rem] font-extrabold leading-none tracking-[0.06em] text-[#00C747] sm:text-[1.08rem]">
                   {release.artist}
                 </div>
 
-                <div className="mb-3 min-h-[2.55rem] text-[0.9rem] font-semibold uppercase leading-tight tracking-[0.05em] text-[#f4fbf3] sm:text-[0.98rem]">
+                <div className="mb-3 min-h-[2.4rem] text-[0.86rem] font-semibold uppercase leading-tight tracking-[0.05em] text-[#f4fbf3] sm:text-[0.94rem]">
                   {release.title}
                 </div>
 
@@ -711,7 +711,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
                     })}
                   </div>
 
-                  <div className="whitespace-nowrap text-[1.1rem] font-extrabold leading-none text-[#f4fbf3]">
+                  <div className="whitespace-nowrap text-[1.05rem] font-extrabold leading-none text-[#f4fbf3]">
                     EUR {release.price.toFixed(2)}
                   </div>
                 </div>
