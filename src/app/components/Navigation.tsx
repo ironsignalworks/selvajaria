@@ -88,7 +88,7 @@ export default function Navigation({
 
           <div className="relative col-start-2 mt-0 flex items-center justify-center">
             <div className="w-full max-w-[520px]">
-              <p className="mb-2 text-center text-[1.02rem] font-bold uppercase tracking-[0.1em] text-[#b7c8b5]">
+              <p className="nav-hero-text-in mb-2 text-center text-[1.02rem] font-bold uppercase tracking-[0.1em] text-[#b7c8b5]">
                 SELVAJARIA RECORDS - Underground label & distro
               </p>
               <form
