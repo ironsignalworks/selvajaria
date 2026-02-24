@@ -10,7 +10,7 @@ import SubpageContent from './components/SubpageContent';
 import type { SubpageKey } from './components/SubpageContent';
 import type { CartItem, CartItemInput } from './components/SubpageContent';
 import { Toaster, toast } from 'sonner';
-import { ChevronUp, HandMetal, Search, X } from 'lucide-react';
+import { ChevronUp, Disc3, Facebook, HandMetal, Instagram, Mail, Music, Search, X, Youtube } from 'lucide-react';
 
 type AppPage = 'releases' | 'search' | SubpageKey;
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
@@ -253,6 +253,37 @@ export default function App() {
                   <ReleaseGrid sortBy={releaseSort} onAddToCart={addToCart} searchQuery="" filters={catalogFilters} />
                 </div>
               </div>
+
+              <section className="mt-8 rounded-sm border-2 border-[#769a75] bg-[#0c130ce0] p-5 sm:p-7">
+                <h2 className="font-display text-4xl font-bold uppercase leading-none tracking-tight text-[#f4fbf3] sm:text-6xl">
+                  <span className="text-[#00C747]">Bio</span>
+                </h2>
+                <p className="mt-4 max-w-4xl text-sm leading-relaxed text-[#b7c8b5] sm:text-base">
+                  Placeholder bio: Selvajaria Records is an independent underground metal label focused on raw intensity,
+                  physical releases, and scene-first collaboration. The catalog is curated around bands and artists pushing
+                  aggressive, uncompromising sounds across thrash, death, black, and heavy traditions.
+                </p>
+                <p className="mt-3 max-w-4xl text-sm leading-relaxed text-[#b7c8b5] sm:text-base">
+                  Built from DIY roots, the label works closely with artists on pressing, distribution, and direct support
+                  to listeners worldwide. This section can be replaced with the final official label biography at any time.
+                </p>
+                <div className="mt-6 border-t border-[#769a75]/35 pt-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#00C747]">Contact & Social</p>
+                  <div className="mt-3 flex flex-col gap-3 text-sm sm:text-base">
+                    <a href="mailto:selvajariarecords@gmail.com" className="inline-flex items-center gap-2 text-[#f4fbf3] hover:text-[#00C747]">
+                      <Mail className="h-4 w-4" />
+                      <span>selvajariarecords@gmail.com</span>
+                    </a>
+                    <div className="flex flex-wrap gap-x-5 gap-y-2 text-[#b7c8b5]">
+                      <a href="https://selvajariarecords.bandcamp.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-[#00C747]"><Music className="h-4 w-4" /> Bandcamp</a>
+                      <a href="https://www.instagram.com/selvajaria_records/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-[#00C747]"><Instagram className="h-4 w-4" /> Instagram</a>
+                      <a href="https://www.facebook.com/selvajariarecords/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-[#00C747]"><Facebook className="h-4 w-4" /> Facebook</a>
+                      <a href="https://www.youtube.com/@SelvajariaRecords" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-[#00C747]"><Youtube className="h-4 w-4" /> YouTube</a>
+                      <a href="https://www.discogs.com/label/2788133-Selvajaria-Records" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-[#00C747]"><Disc3 className="h-4 w-4" /> Discogs</a>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </main>
           </>
         ) : activePage === 'search' ? (
