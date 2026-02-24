@@ -31,10 +31,12 @@ export default function Navigation({
 }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hideVoucherBanner, setHideVoucherBanner] = useState(false);
-  const goToHeroReleases = () => {
+  const goToCatalog = () => {
     onNavigate('releases');
     requestAnimationFrame(() => {
-      document.getElementById('hero-pics')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      requestAnimationFrame(() => {
+        document.getElementById('label-catalog-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     });
   };
   const handleLogoClick = () => {
@@ -57,7 +59,7 @@ export default function Navigation({
   }, []);
 
   const menuItems: MenuItem[] = [
-    { label: 'Out Now!', page: 'releases' },
+    { label: 'New Releases', page: 'releases' },
     { label: 'Distribution', page: 'distro' },
     { label: 'Merch', page: 'merch' },
     { label: 'Contact', page: 'contacto' },
@@ -138,9 +140,9 @@ export default function Navigation({
           <div className="col-span-3 flex items-center justify-center -translate-y-8 pb-0">
             <div className="flex items-center justify-center gap-7">
             {menuItems.map((item) => (
-              <button
+                <button
                 key={item.label}
-                onClick={() => (item.page === 'releases' ? goToHeroReleases() : onNavigate(item.page))}
+                onClick={() => (item.page === 'releases' ? goToCatalog() : onNavigate(item.page))}
                 aria-current={activePage === item.page ? 'page' : undefined}
                 className={`relative font-display text-[1.45rem] font-medium uppercase leading-none transition-colors ${
                   activePage === item.page ? 'text-[#00C747]' : 'text-[#f4fbf3] hover:text-[#00C747]'
@@ -225,7 +227,7 @@ export default function Navigation({
                   <button
                     onClick={() => {
                       if (item.page === 'releases') {
-                        goToHeroReleases();
+                        goToCatalog();
                       } else {
                         onNavigate(item.page);
                       }

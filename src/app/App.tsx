@@ -3,14 +3,16 @@ import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import FilterSidebar from './components/FilterSidebar';
 import type { CatalogFilters } from './components/FilterSidebar';
-import ReleaseGrid, { releases } from './components/ReleaseGrid';
+import ReleaseGrid from './components/ReleaseGrid';
 import type { ReleaseSort } from './components/ReleaseGrid';
 import Footer from './components/Footer';
 import SubpageContent from './components/SubpageContent';
 import type { SubpageKey } from './components/SubpageContent';
 import type { CartItem, CartItemInput } from './components/SubpageContent';
+import useCmsContent from './lib/useCmsContent';
 import { Toaster, toast } from 'sonner';
 import { ChevronUp, Disc3, Facebook, HandMetal, Instagram, Mail, Music, Search, X, Youtube } from 'lucide-react';
+import Lenis from 'lenis';
 
 type AppPage = 'releases' | 'search' | SubpageKey;
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
@@ -22,6 +24,7 @@ const EMPTY_CATALOG_FILTERS: CatalogFilters = {
 };
 
 export default function App() {
+  const { catalogReleases, featuredReleases, distroItems, distroUpdates, merchItems, cmsEnabled, cmsError } = useCmsContent();
   const [activePage, setActivePage] = useState<AppPage>('releases');
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -81,7 +84,7 @@ export default function App() {
   };
   const normalizedSearch = searchQuery.trim().toLowerCase();
   const searchResults = normalizedSearch
-    ? releases.filter((release) =>
+    ? catalogReleases.filter((release) =>
         [release.artist, release.title, release.genre].some((field) => field.toLowerCase().includes(normalizedSearch))
       )
     : [];
@@ -145,10 +148,36 @@ export default function App() {
     return () => window.removeEventListener('hero-view-release', revealCatalogOnHeroRequest as EventListener);
   }, []);
   useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.1,
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1,
+    });
+
+    let frameId = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      frameId = window.requestAnimationFrame(raf);
+    };
+    frameId = window.requestAnimationFrame(raf);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      lenis.destroy();
+    };
+  }, []);
+
+  useEffect(() => {
     const onScroll = () => {
       const mobile = window.matchMedia('(max-width: 767px)').matches;
       setShowBackToTop(window.scrollY > (mobile ? 160 : 380));
-      setParallaxOffset(Math.min(window.scrollY * 0.12, 220));
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const footer = document.querySelector('footer');
+      const footerTop = footer ? footer.getBoundingClientRect().top + window.scrollY : maxScroll;
+      const parallaxEnd = Math.max(1, Math.min(maxScroll, footerTop - window.innerHeight));
+      const progress = Math.min(window.scrollY / parallaxEnd, 1);
+      setParallaxOffset(Math.min(progress * 100, 100));
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -164,14 +193,14 @@ export default function App() {
         Skip to main content
       </a>
       <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 top-44 z-0 bg-[#050805] bg-cover bg-no-repeat md:top-32"
+        className="pointer-events-none fixed inset-x-0 bottom-0 top-52 z-0 bg-[#050805] bg-cover bg-no-repeat"
         style={{
           backgroundImage: `url('${asset('/bg1.jpg')}')`,
-          backgroundPosition: `center ${-parallaxOffset}px`,
+          backgroundPosition: `center ${parallaxOffset}%`,
           willChange: 'background-position',
         }}
       />
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 top-44 z-[1] bg-[#050805]/80 md:top-32" />
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 top-52 z-[1] bg-[#050805]/80" />
       <div className="relative z-10">
         <Navigation
           activePage={activePage}
@@ -186,9 +215,15 @@ export default function App() {
         />
         {activePage === 'releases' ? (
           <>
-            <Hero onEnterStore={() => navigateTo('distro')} />
+            <Hero onEnterStore={() => navigateTo('distro')} featuredReleases={featuredReleases} />
             <main id="main-content" className="container mx-auto px-4 py-10 sm:py-14">
               <h1 className="sr-only">Selvajaria Records catalog</h1>
+              {cmsEnabled && cmsError && (
+                <div className="mb-4 border border-[#a43030]/60 bg-[#2a1010] px-4 py-3 text-[#f4c2c2]">
+                  <p className="text-xs uppercase tracking-[0.12em]">CMS offline</p>
+                  <p className="mt-1 text-sm">Showing fallback local data. {cmsError}</p>
+                </div>
+              )}
               <div className="mb-6 lg:hidden">
                 <button
                   onClick={() => setMobileFiltersOpen((prev) => !prev)}
@@ -206,7 +241,7 @@ export default function App() {
                     letterSpacing: '0.05em'
                   }}
                 >
-                  Showing 31 releases
+                  Showing {catalogReleases.length} releases
                 </p>
               </div>
 
@@ -231,7 +266,7 @@ export default function App() {
                   </div>
 
                   <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <span className="text-xs uppercase tracking-[0.14em] text-[#769a75]">Showing 31 releases</span>
+                    <span className="text-xs uppercase tracking-[0.14em] text-[#769a75]">Showing {catalogReleases.length} releases</span>
 
                       <label htmlFor="release-sort" className="sr-only">Sort releases</label>
                       <select
@@ -250,7 +285,7 @@ export default function App() {
                       </select>
                   </div>
 
-                  <ReleaseGrid sortBy={releaseSort} onAddToCart={addToCart} searchQuery="" filters={catalogFilters} />
+                  <ReleaseGrid sortBy={releaseSort} onAddToCart={addToCart} searchQuery="" filters={catalogFilters} releasesData={catalogReleases} />
                 </div>
               </div>
 
@@ -298,7 +333,7 @@ export default function App() {
             </section>
 
             <div className="rounded-sm border-2 border-[#769a75] bg-[#0c130ce0] p-5 sm:p-7 brutalist-shadow">
-              <ReleaseGrid sortBy={releaseSort} onAddToCart={addToCart} searchQuery={searchQuery} filters={EMPTY_CATALOG_FILTERS} />
+              <ReleaseGrid sortBy={releaseSort} onAddToCart={addToCart} searchQuery={searchQuery} filters={EMPTY_CATALOG_FILTERS} releasesData={catalogReleases} />
             </div>
           </main>
         ) : (
@@ -310,6 +345,9 @@ export default function App() {
             onUpdateCartQty={updateCartQty}
             onRemoveCartItem={removeCartItem}
             onClearCart={clearCart}
+            distroItemsData={distroItems}
+            distroUpdates={distroUpdates}
+            merchItemsData={merchItems}
           />
         )}
 

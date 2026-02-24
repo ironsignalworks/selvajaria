@@ -1,7 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ImageWithFallback } from './ImageWithFallback';
 
-const heroReleases = [
+export interface HeroRelease {
+  artist: string;
+  title: string;
+  image: string;
+  line: string;
+}
+
+const defaultHeroReleases: HeroRelease[] = [
   {
     artist: 'FATAL EXPOSURE',
     title: 'BIKINI ATOLL BROADCAST',
@@ -25,9 +32,14 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+
 
 interface HeroProps {
   onEnterStore: () => void;
+  featuredReleases?: HeroRelease[];
 }
 
-export default function Hero({ onEnterStore }: HeroProps) {
+export default function Hero({ onEnterStore, featuredReleases }: HeroProps) {
+  const heroReleases = useMemo(
+    () => (featuredReleases && featuredReleases.length > 0 ? featuredReleases : defaultHeroReleases),
+    [featuredReleases]
+  );
   const [heroIndex, setHeroIndex] = useState(0);
   const current = heroReleases[heroIndex];
   const openCurrentRelease = () => {
@@ -61,6 +73,10 @@ export default function Hero({ onEnterStore }: HeroProps) {
   };
 
   useEffect(() => {
+    setHeroIndex(0);
+  }, [heroReleases]);
+
+  useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return;
     }
@@ -72,7 +88,7 @@ export default function Hero({ onEnterStore }: HeroProps) {
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [heroReleases.length]);
 
   return (
     <section

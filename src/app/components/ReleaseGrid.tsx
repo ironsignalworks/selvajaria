@@ -4,8 +4,8 @@ import { Disc3, Disc, CassetteTape, Download, Play } from 'lucide-react';
 import type { CartItemInput } from './SubpageContent';
 import type { CatalogFilters } from './FilterSidebar';
 
-interface Release {
-  id: number;
+export interface Release {
+  id: number | string;
   artist: string;
   title: string;
   formats: ('vinyl' | 'cd' | 'tape' | 'digital')[];
@@ -18,6 +18,8 @@ interface Release {
   trackHighlights: string[];
   listeningUrl?: string;
   inStock?: boolean;
+  countries?: string[];
+  isLatest?: boolean;
 }
 
 export type ReleaseSort =
@@ -456,9 +458,10 @@ interface ReleaseGridProps {
   onAddToCart: (item: CartItemInput) => void;
   searchQuery: string;
   filters: CatalogFilters;
+  releasesData?: Release[];
 }
 
-const releaseCountriesById: Record<number, string[]> = {
+const releaseCountriesById: Record<string, string[]> = {
   2: ['spain'],
   3: ['spain'],
   4: ['spain'],
@@ -481,13 +484,18 @@ const releaseCountriesById: Record<number, string[]> = {
 };
 
 const getReleaseCountryTags = (release: Release) => {
-  return releaseCountriesById[release.id] ?? ['worldwide'];
+  if (release.countries && release.countries.length > 0) {
+    return release.countries;
+  }
+
+  return releaseCountriesById[String(release.id)] ?? ['worldwide'];
 };
 
-export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters }: ReleaseGridProps) {
+export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters, releasesData }: ReleaseGridProps) {
   const [detailModalRelease, setDetailModalRelease] = useState<Release | null>(null);
   const [isDetailImageLarge, setIsDetailImageLarge] = useState(false);
   const [showAllReleases, setShowAllReleases] = useState(false);
+  const sourceReleases = releasesData ?? releases;
   const latestReleaseId = 1;
   const closeReleaseDetails = () => {
     setDetailModalRelease(null);
@@ -510,7 +518,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
       image: release.image,
     });
   };
-  const sortedReleases = [...releases].sort((a, b) => {
+  const sortedReleases = [...sourceReleases].sort((a, b) => {
     switch (sortBy) {
       case 'oldest':
         return a.year - b.year;
@@ -565,7 +573,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
         return;
       }
 
-      const matched = releases.find(
+      const matched = sourceReleases.find(
         (release) =>
           release.artist.toUpperCase() === artist &&
           release.title.toUpperCase() === title
@@ -583,7 +591,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
       if (!artist || !title) return;
       const a = artist.toUpperCase();
       const t = title.toUpperCase();
-      const matched = releases.find(
+      const matched = sourceReleases.find(
         (release) => release.artist.toUpperCase() === a && release.title.toUpperCase() === t
       );
       if (matched) setDetailModalRelease(matched);
@@ -595,7 +603,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
       try {
         const a = pending.artist.toUpperCase();
         const t = pending.title.toUpperCase();
-        const matched = releases.find(
+        const matched = sourceReleases.find(
           (release) => release.artist.toUpperCase() === a && release.title.toUpperCase() === t
         );
         if (matched) {
@@ -620,7 +628,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
         (window as any).openRelease = undefined;
       }
     };
-  }, []);
+  }, [sourceReleases]);
 
   useEffect(() => {
     setShowAllReleases(false);
@@ -672,7 +680,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
                   />
                 </button>
 
-                {release.id === latestReleaseId && (
+                {(release.isLatest ?? release.id === latestReleaseId) && (
                   <div
                     className="absolute top-2 left-2 bg-[#00C747] px-2 py-1"
                     style={{

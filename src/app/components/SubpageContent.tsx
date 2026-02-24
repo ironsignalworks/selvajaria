@@ -26,6 +26,9 @@ interface SubpageContentProps {
   onUpdateCartQty: (id: string, qty: number) => void;
   onRemoveCartItem: (id: string) => void;
   onClearCart: () => void;
+  distroItemsData?: DistroItem[];
+  distroUpdates?: DistroUpdate[];
+  merchItemsData?: MerchItem[];
 }
 
 const pageMeta: Record<SubpageKey, { title: string; intro: string }> = {
@@ -79,7 +82,7 @@ const pageMeta: Record<SubpageKey, { title: string; intro: string }> = {
   },
 };
 
-interface DistroItem {
+export interface DistroItem {
   id: string;
   name: string;
   artist: string;
@@ -87,6 +90,9 @@ interface DistroItem {
   format: string;
   price: number;
   listeningUrl?: string;
+  genre?: string;
+  country?: string;
+  inStock?: boolean;
 }
 
 export interface CartItemInput {
@@ -102,7 +108,15 @@ export interface CartItem extends CartItemInput {
   qty: number;
 }
 
-const distroItems: DistroItem[] = [
+export interface DistroUpdate {
+  id: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  href?: string;
+}
+
+export const distroItems: DistroItem[] = [
   { id: 'fatal-exposure-bikini-atoll-broadcast', name: 'Bikini Atoll Broadcast', artist: 'Fatal Exposure', image: '/fatal exposure capa.jpg', format: 'CD', price: 12, listeningUrl: 'https://selvajariarecords.bandcamp.com/' },
   { id: 'catachrest-target-of-ruin', name: 'Target of Ruin', artist: 'Catachrest', image: '/catachrest.jpg', format: 'CD', price: 12, listeningUrl: 'https://selvajariarecords.bandcamp.com/' },
   { id: 'poison-the-preacher-vs-the-world', name: 'VS the World', artist: 'Poison the Preacher', image: '/poisonthepreacher.jpg', format: 'CD', price: 12, listeningUrl: 'https://selvajariarecords.bandcamp.com/' },
@@ -137,7 +151,22 @@ const DISTRO_FILTER_METADATA: Record<string, { genre: string; country: string; i
   'animalesco-o-metodo': { genre: 'heavy', country: 'worldwide', inStock: true },
 };
 
-interface MerchItem {
+const defaultDistroUpdates: DistroUpdate[] = [
+  {
+    id: 'distro-update-1',
+    title: 'February distro restock',
+    date: '2026-02-10',
+    excerpt: 'Selected thrash and death titles are back in stock. Orders dispatch in 2 to 5 business days.',
+  },
+  {
+    id: 'distro-update-2',
+    title: 'New allied label arrivals',
+    date: '2026-01-26',
+    excerpt: 'Fresh batch from partner labels added to distro. Quantities are limited.',
+  },
+];
+
+export interface MerchItem {
   id: string;
   name: string;
   image: string;
@@ -146,7 +175,7 @@ interface MerchItem {
   details: string[];
 }
 
-const merchItems: MerchItem[] = [
+export const merchItems: MerchItem[] = [
   {
     id: 'selvajaria-hoodie',
     name: 'Selvajaria Hoodie',
@@ -199,6 +228,9 @@ export default function SubpageContent({
   onUpdateCartQty,
   onRemoveCartItem,
   onClearCart,
+  distroItemsData,
+  distroUpdates,
+  merchItemsData,
 }: SubpageContentProps) {
   const meta = pageMeta[page];
   const [detailMerch, setDetailMerch] = useState<MerchItem | null>(null);
@@ -212,19 +244,22 @@ export default function SubpageContent({
   const extraItemShipping = Math.floor(totalItemCount / 4) * 2;
   const shippingFee = cartItems.length > 0 ? 8 + (shippingZone - 1) * 2 + extraItemShipping : 0;
   const cartTotal = cartSubtotal + shippingFee;
-  const filteredDistroItems = distroItems.filter((item) => {
+  const activeDistroItems = distroItemsData ?? distroItems;
+  const activeDistroUpdates = distroUpdates ?? defaultDistroUpdates;
+  const activeMerchItems = merchItemsData ?? merchItems;
+  const filteredDistroItems = activeDistroItems.filter((item) => {
     const meta = DISTRO_FILTER_METADATA[item.id];
     const formatTag = item.format.toLowerCase();
     const normalizedFormat = formatTag === 'lp' ? 'vinyl' : formatTag;
-    const genreTag = meta?.genre ?? '';
-    const countryTag = meta?.country ?? '';
+    const genreTag = item.genre ?? meta?.genre ?? '';
+    const countryTag = item.country ?? meta?.country ?? '';
 
     const matchesFormat =
       distroFilters.formats.length === 0 ||
       distroFilters.formats.some((format) => formatTag.includes(format) || normalizedFormat.includes(format));
     const matchesGenre = distroFilters.genres.length === 0 || distroFilters.genres.includes(genreTag);
     const matchesCountry = distroFilters.countries.length === 0 || distroFilters.countries.includes(countryTag);
-    const matchesStock = !distroFilters.inStockOnly || (meta?.inStock ?? true);
+    const matchesStock = !distroFilters.inStockOnly || (item.inStock ?? meta?.inStock ?? true);
 
     return matchesFormat && matchesGenre && matchesCountry && matchesStock;
   });
@@ -296,9 +331,43 @@ export default function SubpageContent({
         </section>
       )}
 
+      {page === 'distro' && activeDistroUpdates.length > 0 && (
+        <section className="mt-8 rounded-sm border border-[#769a75]/50 bg-[#101910c7] p-5">
+          <h3 className="uppercase text-[#00C747]" style={{ fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.12em' }}>
+            Distro Updates
+          </h3>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            {activeDistroUpdates.map((update) => (
+              <article key={update.id} className="rounded-sm border border-[#769a75]/35 bg-[#131e13]/70 p-4">
+                <p className="text-[#769a75]" style={{ fontSize: '0.72rem', letterSpacing: '0.08em' }}>
+                  {new Date(update.date).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </p>
+                <h4 className="mt-2 text-[#f4fbf3]" style={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '0.04em' }}>
+                  {update.title}
+                </h4>
+                <p className="mt-2 text-[#b7c8b5]" style={{ fontSize: '0.88rem', lineHeight: 1.55 }}>
+                  {update.excerpt}
+                </p>
+                {update.href && (
+                  <a
+                    href={update.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-flex text-[#00C747] hover:text-[#9dffbe]"
+                    style={{ fontSize: '0.74rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}
+                  >
+                    Read More
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       {page === 'merch' && (
         <section className="grid gap-4 md:grid-cols-3">
-          {merchItems.map((item) => (
+          {activeMerchItems.map((item) => (
             <article key={item.name} className="brutalist-border brutalist-shadow-hover overflow-hidden bg-[#101910]">
               <button
                 onClick={() => {
