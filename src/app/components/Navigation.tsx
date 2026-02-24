@@ -39,7 +39,7 @@ export default function Navigation({
   }, [activePage]);
 
   const menuItems: MenuItem[] = [
-    { label: 'Releases', page: 'releases' },
+    { label: 'Out Now!', page: 'releases' },
     { label: 'Distribution', page: 'distro' },
     { label: 'Merch', page: 'merch' },
     { label: 'Contact', page: 'contacto' },
