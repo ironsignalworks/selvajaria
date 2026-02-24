@@ -626,6 +626,30 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters 
     setShowAllReleases(false);
   }, [searchQuery, filters]);
 
+  useEffect(() => {
+    if (!detailModalRelease && !isDetailImageLarge) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') {
+        return;
+      }
+
+      if (isDetailImageLarge) {
+        setIsDetailImageLarge(false);
+        return;
+      }
+
+      if (detailModalRelease) {
+        closeReleaseDetails();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [detailModalRelease, isDetailImageLarge]);
+
   return (
     <>
       <div id="releases-catalog" className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-4">

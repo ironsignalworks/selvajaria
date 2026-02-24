@@ -176,16 +176,16 @@ export default function App() {
                 </div>
 
                 <div className="flex-1 rounded-sm border-2 border-[#769a75] bg-[#0c130ce0] p-5 sm:p-7 brutalist-shadow">
-                  <div id="label-catalog-top" className="mb-10">
+                  <div id="label-catalog-top" className="mb-5">
                     <h2 className="font-display text-4xl font-bold uppercase leading-none tracking-tight text-[#f4fbf3] sm:text-6xl">
                       Label <span className="text-[#00C747]">Catalog</span>
                     </h2>
-                    <p className="mt-3 max-w-2xl text-sm font-medium text-[#769a75] sm:text-base">
+                    <p className="mt-2 max-w-2xl text-sm font-medium text-[#769a75] sm:text-base">
                       Core roster releases and selected underground cuts. Physical-first, limited stock.
                     </p>
                   </div>
 
-                  <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <span className="text-xs uppercase tracking-[0.14em] text-[#769a75]">Showing 31 releases</span>
 
                       <label htmlFor="release-sort" className="sr-only">Sort releases</label>

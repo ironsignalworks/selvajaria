@@ -30,6 +30,12 @@ export default function Navigation({
   onSearchFocus,
 }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const goToHeroReleases = () => {
+    onNavigate('releases');
+    requestAnimationFrame(() => {
+      document.getElementById('hero-releases')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
   const handleLogoClick = () => {
     onNavigate('releases');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -120,7 +126,7 @@ export default function Navigation({
             {menuItems.map((item) => (
               <button
                 key={item.label}
-                onClick={() => onNavigate(item.page)}
+                onClick={() => (item.page === 'releases' ? goToHeroReleases() : onNavigate(item.page))}
                 aria-current={activePage === item.page ? 'page' : undefined}
                 className={`relative font-display text-[1.45rem] font-medium uppercase leading-none transition-colors ${
                   activePage === item.page ? 'text-[#00C747]' : 'text-[#f4fbf3] hover:text-[#00C747]'
@@ -203,7 +209,11 @@ export default function Navigation({
                 <li key={`mobile-${item.label}`}>
                   <button
                     onClick={() => {
-                      onNavigate(item.page);
+                      if (item.page === 'releases') {
+                        goToHeroReleases();
+                      } else {
+                        onNavigate(item.page);
+                      }
                       setMobileOpen(false);
                     }}
                     aria-current={activePage === item.page ? 'page' : undefined}

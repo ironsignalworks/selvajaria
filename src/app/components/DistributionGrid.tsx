@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ImageWithFallback } from './ImageWithFallback';
 import { Play } from 'lucide-react';
 import type { CartItemInput } from './SubpageContent';
@@ -35,6 +35,30 @@ export default function DistroGrid({ items, onAddToCart }: Props) {
     setDetailModalItem(null);
     setIsDetailImageLarge(false);
   };
+
+  useEffect(() => {
+    if (!detailModalItem && !isDetailImageLarge) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') {
+        return;
+      }
+
+      if (isDetailImageLarge) {
+        setIsDetailImageLarge(false);
+        return;
+      }
+
+      if (detailModalItem) {
+        closeItemDetails();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [detailModalItem, isDetailImageLarge]);
 
   return (
     <>
@@ -190,4 +214,5 @@ export default function DistroGrid({ items, onAddToCart }: Props) {
     </>
   );
 }
+
 
