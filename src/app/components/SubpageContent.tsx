@@ -184,6 +184,7 @@ export default function SubpageContent({
   const [isMerchImageLarge, setIsMerchImageLarge] = useState(false);
   const [mobileDistroFiltersOpen, setMobileDistroFiltersOpen] = useState(false);
   const [shippingZone, setShippingZone] = useState<1 | 2 | 3 | 4>(1);
+  const useCatalogStyleHeader = page === 'distro' || page === 'merch' || page === 'contacto';
   const totalItemCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
   const cartSubtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
   const extraItemShipping = Math.floor(totalItemCount / 4) * 2;
@@ -192,30 +193,43 @@ export default function SubpageContent({
 
   return (
     <main id="main-content" className="container mx-auto px-4 py-12">
-      <section className="mb-8 rounded-sm border border-[#769a75]/60 bg-[#101910cc] p-4 sm:p-6">
-        <h2
-          className="uppercase"
-          style={{
-            fontSize: '1.5rem',
-            fontWeight: 700,
-            letterSpacing: '0.15em',
-            color: '#f4fbf3'
-          }}
-        >
-          {meta.title}
-        </h2>
-        <p
-          className="mt-3"
-          style={{
-            fontSize: '0.9rem',
-            color: '#b7c8b5',
-            lineHeight: 1.6,
-            letterSpacing: '0.03em'
-          }}
-        >
-          {meta.intro}
-        </p>
-      </section>
+      {useCatalogStyleHeader ? (
+        <section className="mb-6">
+          <div id="label-catalog-top" className="mb-5">
+            <h2 className="font-display text-4xl font-bold uppercase leading-none tracking-tight text-[#f4fbf3] sm:text-6xl">
+              <span className="text-[#00C747]">{meta.title}</span>
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm font-medium text-[#769a75] sm:text-base">
+              {meta.intro}
+            </p>
+          </div>
+        </section>
+      ) : (
+        <section className="mb-8 rounded-sm border border-[#769a75]/60 bg-[#101910cc] p-4 sm:p-6">
+          <h2
+            className="uppercase"
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              letterSpacing: '0.15em',
+              color: '#f4fbf3'
+            }}
+          >
+            {meta.title}
+          </h2>
+          <p
+            className="mt-3"
+            style={{
+              fontSize: '0.9rem',
+              color: '#b7c8b5',
+              lineHeight: 1.6,
+              letterSpacing: '0.03em'
+            }}
+          >
+            {meta.intro}
+          </p>
+        </section>
+      )}
 
       {page === 'distro' && (
         <section className="flex flex-col gap-8 lg:flex-row">

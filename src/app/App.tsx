@@ -135,6 +135,15 @@ export default function App() {
     observer.observe(panel);
     return () => observer.disconnect();
   }, [activePage]);
+
+  useEffect(() => {
+    const revealCatalogOnHeroRequest = () => {
+      setCatalogRevealed(true);
+    };
+
+    window.addEventListener('hero-view-release', revealCatalogOnHeroRequest as EventListener);
+    return () => window.removeEventListener('hero-view-release', revealCatalogOnHeroRequest as EventListener);
+  }, []);
   useEffect(() => {
     const onScroll = () => {
       const mobile = window.matchMedia('(max-width: 767px)').matches;
@@ -208,8 +217,8 @@ export default function App() {
 
                 <div
                   ref={catalogPanelRef}
-                  className={`flex-1 rounded-sm border-2 border-[#769a75] bg-[#0c130ce0] p-5 sm:p-7 brutalist-shadow motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 transition-all duration-200 ease-out ${
-                    catalogRevealed ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                  className={`flex-1 rounded-sm border-2 border-[#769a75] bg-[#0c130ce0] p-5 sm:p-7 motion-reduce:transition-none motion-reduce:opacity-100 transition-opacity duration-200 ease-out ${
+                    catalogRevealed ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
                   <div id="label-catalog-top" className="mb-5">

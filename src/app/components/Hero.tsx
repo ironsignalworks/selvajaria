@@ -99,6 +99,7 @@ export default function Hero({ onEnterStore }: HeroProps) {
           <div className="relative mx-auto w-full max-w-[28rem] sm:max-w-[30rem]">
             <div className="relative aspect-square overflow-hidden bg-transparent">
               <button
+                type="button"
                 onClick={openCurrentRelease}
                 className="block h-full w-full cursor-pointer"
                 aria-label={`View release details for ${current.artist} ${current.title}`}
@@ -127,12 +128,14 @@ export default function Hero({ onEnterStore }: HeroProps) {
               </p>
               <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:justify-start sm:gap-4">
                 <button
+                  type="button"
                   onClick={openCurrentRelease}
                   className="border-2 border-[#769a75] bg-[#131e13] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#f4fbf3] hover:border-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
                 >
                   View Release
                 </button>
                 <button
+                  type="button"
                   onClick={onEnterStore}
                   className="border-2 border-[#00FF5A] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
                 >
@@ -144,6 +147,7 @@ export default function Hero({ onEnterStore }: HeroProps) {
               {heroReleases.map((_, index) => (
                 <button
                   key={index}
+                  type="button"
                   onClick={() => setHeroIndex(index)}
                   aria-label={`Show hero release ${index + 1}`}
                   aria-pressed={heroIndex === index}
