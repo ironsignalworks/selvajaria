@@ -1,4 +1,4 @@
-﻿import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import FilterSidebar from './components/FilterSidebar';
@@ -33,6 +33,8 @@ export default function App() {
   const [newsletterConsent, setNewsletterConsent] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [parallaxOffset, setParallaxOffset] = useState(0);
+  const [catalogRevealed, setCatalogRevealed] = useState(false);
+  const catalogPanelRef = useRef<HTMLDivElement | null>(null);
   const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
   const addToCart = (item: CartItemInput) => {
@@ -105,6 +107,35 @@ export default function App() {
   }, [activePage]);
 
   useEffect(() => {
+    if (activePage !== 'releases') {
+      return;
+    }
+
+    setCatalogRevealed(false);
+    const panel = catalogPanelRef.current;
+    if (!panel) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        setCatalogRevealed(true);
+        observer.disconnect();
+      },
+      {
+        threshold: 0.01,
+        rootMargin: '0px',
+      }
+    );
+
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, [activePage]);
+  useEffect(() => {
     const onScroll = () => {
       const mobile = window.matchMedia('(max-width: 767px)').matches;
       setShowBackToTop(window.scrollY > (mobile ? 160 : 380));
@@ -124,14 +155,14 @@ export default function App() {
         Skip to main content
       </a>
       <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 top-16 z-0 bg-[#050805] bg-cover bg-no-repeat md:top-32"
+        className="pointer-events-none fixed inset-x-0 bottom-0 top-44 z-0 bg-[#050805] bg-cover bg-no-repeat md:top-32"
         style={{
           backgroundImage: `url('${asset('/bg1.jpg')}')`,
           backgroundPosition: `center ${-parallaxOffset}px`,
           willChange: 'background-position',
         }}
       />
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 top-16 z-[1] bg-[#050805]/80 md:top-32" />
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 top-44 z-[1] bg-[#050805]/80 md:top-32" />
       <div className="relative z-10">
         <Navigation
           activePage={activePage}
@@ -175,7 +206,12 @@ export default function App() {
                   <FilterSidebar value={catalogFilters} onChange={setCatalogFilters} />
                 </div>
 
-                <div className="flex-1 rounded-sm border-2 border-[#769a75] bg-[#0c130ce0] p-5 sm:p-7 brutalist-shadow">
+                <div
+                  ref={catalogPanelRef}
+                  className={`flex-1 rounded-sm border-2 border-[#769a75] bg-[#0c130ce0] p-5 sm:p-7 brutalist-shadow motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 transition-all duration-200 ease-out ${
+                    catalogRevealed ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                  }`}
+                >
                   <div id="label-catalog-top" className="mb-5">
                     <h2 className="font-display text-4xl font-bold uppercase leading-none tracking-tight text-[#f4fbf3] sm:text-6xl">
                       Label <span className="text-[#00C747]">Catalog</span>
