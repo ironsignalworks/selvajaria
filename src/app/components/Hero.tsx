@@ -104,15 +104,18 @@ export default function Hero({ onEnterStore }: HeroProps) {
             </div>
           </div>
 
-          <div className="w-full max-w-[34rem] justify-self-center text-left min-h-[19rem] sm:min-h-[21rem] lg:justify-self-start">
+          <div className="relative w-full max-w-[34rem] justify-self-center text-left min-h-[19rem] -translate-y-2 sm:min-h-[21rem] sm:-translate-y-2 lg:justify-self-start lg:-translate-y-3">
+            <div className="mb-2 inline-flex border border-[#00FF5A] bg-[#00FF5A] px-3 py-1 font-display text-[10px] font-bold uppercase tracking-[0.12em] text-[#131e13]">
+              New Release Alert
+            </div>
             <h2 className="min-h-[7.75rem] font-display text-5xl font-bold uppercase leading-[0.95] tracking-tight text-[#f4fbf3] sm:min-h-[11rem] sm:text-7xl">
               {current.artist}
               <span className="block text-[#00FF5A]">{current.title}</span>
             </h2>
-            <p className="mt-4 min-h-[3.5rem] max-w-xl text-lg font-medium leading-relaxed text-[#769a75] sm:text-xl">
+            <p className="mt-2 min-h-[3.5rem] max-w-xl text-lg font-medium leading-relaxed text-[#769a75] sm:text-xl">
               {current.line}
             </p>
-            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:justify-start sm:gap-4">
+            <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:justify-start sm:gap-4">
               <button
                 onClick={openCurrentRelease}
                 className="border-2 border-[#769a75] bg-[#131e13] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#f4fbf3] hover:border-[#00FF5A] hover:bg-[#00FF5A] hover:text-[#131e13]"
