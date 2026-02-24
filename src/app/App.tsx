@@ -177,7 +177,7 @@ export default function App() {
       const footerTop = footer ? footer.getBoundingClientRect().top + window.scrollY : maxScroll;
       const parallaxEnd = Math.max(1, Math.min(maxScroll, footerTop - window.innerHeight));
       const progress = Math.min(window.scrollY / parallaxEnd, 1);
-      setParallaxOffset(Math.min(progress * 100, 100));
+      setParallaxOffset(Math.min(progress * 68, 68));
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -193,14 +193,14 @@ export default function App() {
         Skip to main content
       </a>
       <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 top-52 z-0 bg-[#050805] bg-cover bg-no-repeat"
+        className="pointer-events-none fixed inset-0 z-0 bg-[#050805] bg-cover bg-no-repeat"
         style={{
           backgroundImage: `url('${asset('/bg1.jpg')}')`,
-          backgroundPosition: `center ${parallaxOffset}%`,
+          backgroundPosition: `center ${Math.max(parallaxOffset + 0, 0)}%`,
           willChange: 'background-position',
         }}
       />
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 top-52 z-[1] bg-[#050805]/80" />
+      <div className="pointer-events-none fixed inset-0 z-[1] bg-[#050805]/68" />
       <div className="relative z-10">
         <Navigation
           activePage={activePage}
