@@ -55,6 +55,8 @@ export default function Hero({ onEnterStore, featuredReleases }: HeroProps) {
       fansOfLine: ffo ? `For fans of: ${ffo}` : '',
     };
   }, [current.line]);
+  const primaryLineWithOutNow =
+    primaryLine && !primaryLine.toLowerCase().includes('out now') ? `OUT NOW! ${primaryLine}` : primaryLine;
   const openCurrentRelease = () => {
     // store requested view on window in case listener isn't mounted yet
     (window as any).__requestedHeroView = { artist: current.artist, title: current.title };
@@ -156,12 +158,12 @@ export default function Hero({ onEnterStore, featuredReleases }: HeroProps) {
                 {current.artist}
                 <span className="block text-[#00C747]">{current.title}</span>
               </h2>
-              <div className="mt-2 min-h-[3.5rem] max-w-xl">
-                <p className="text-lg font-semibold leading-relaxed text-[#d8f2d7] drop-shadow-[0_1px_6px_rgba(0,0,0,0.65)] sm:text-xl">
-                  {primaryLine}
+              <div className="mt-2 min-h-[3.5rem] max-w-xl rounded-sm bg-[#050805]/36 px-2 py-1.5 backdrop-blur-[1px]">
+                <p className="text-[1.08rem] font-bold leading-relaxed text-[#f2fff2] drop-shadow-[0_2px_8px_rgba(0,0,0,0.78)] sm:text-[1.22rem]">
+                  {primaryLineWithOutNow}
                 </p>
                 {fansOfLine && (
-                  <p className="mt-1 text-base font-medium leading-relaxed text-[#f1fff1] drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)] sm:text-lg">
+                  <p className="mt-1 text-[1rem] font-semibold leading-relaxed text-[#f7fff7] drop-shadow-[0_2px_8px_rgba(0,0,0,0.82)] sm:text-[1.08rem]">
                     {fansOfLine}
                   </p>
                 )}
