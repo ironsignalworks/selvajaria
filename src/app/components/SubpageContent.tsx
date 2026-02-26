@@ -2,9 +2,10 @@
 import FilterSidebar from './FilterSidebar';
 import type { CatalogFilters } from './FilterSidebar';
 import DistroGrid from './DistributionGrid';
-import { Mail, Instagram, Facebook, Youtube, Disc3, type LucideIcon } from 'lucide-react';
+import { Mail, Instagram, Facebook, Youtube, Disc3, Music, Skull, type LucideIcon } from 'lucide-react';
 
 export type SubpageKey =
+  | 'about'
   | 'distro'
   | 'merch'
   | 'contacto'
@@ -32,6 +33,10 @@ interface SubpageContentProps {
 }
 
 const pageMeta: Record<SubpageKey, { title: string; intro: string }> = {
+  about: {
+    title: 'About',
+    intro: 'Independent underground metal label focused on physical releases and scene-first collaboration.',
+  },
   distro: {
     title: 'Distro',
     intro: 'Hand-picked underground titles from allied labels and bands.',
@@ -196,23 +201,42 @@ export const merchItems: MerchItem[] = [
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
 const contactLinks = [
-  { label: 'Email', href: 'mailto:selvajariarecords@gmail.com', value: 'selvajariarecords@gmail.com' },
+  {
+    label: 'Email (General)',
+    href: 'mailto:selvajariarecords.pt@gmail.com',
+    value: 'selvajariarecords.pt@gmail.com',
+    sub: 'General, band submissions, wholesale, trades',
+  },
+  {
+    label: 'Email (Orders)',
+    href: 'mailto:selvajaria.orders@outlook.com',
+    value: 'selvajaria.orders@outlook.com',
+    sub: 'Website orders + newsletter',
+  },
   { label: 'Bandcamp', href: 'https://selvajariarecords.bandcamp.com/', value: 'selvajariarecords.bandcamp.com' },
   { label: 'Discogs', href: 'https://www.discogs.com/label/2788133-Selvajaria-Records', value: 'discogs.com/label/2788133-Selvajaria-Records' },
   { label: 'Instagram', href: 'https://www.instagram.com/selvajaria_records/', value: '@selvajaria_records' },
   { label: 'Facebook', href: 'https://www.facebook.com/selvajariarecords/', value: 'facebook.com/selvajariarecords' },
   { label: 'YouTube', href: 'https://www.youtube.com/@SelvajariaRecords', value: '@SelvajariaRecords' },
+  {
+    label: 'Metal Archives',
+    href: 'https://www.metal-archives.com/labels/Selvajaria_Records/58844',
+    value: 'metal-archives.com/labels/Selvajaria_Records/58844',
+  },
 ];
 
 const contactIcons: Record<string, LucideIcon> = {
-  Email: Mail,
-  Bandcamp: Disc3,
+  'Email (General)': Mail,
+  'Email (Orders)': Mail,
+  Bandcamp: Music,
+  Discogs: Disc3,
   Instagram: Instagram,
   Facebook: Facebook,
   YouTube: Youtube,
+  'Metal Archives': Skull,
 };
 
-const styleHighlights: Record<Exclude<SubpageKey, 'distro' | 'merch' | 'contacto' | 'cart' | 'privacy' | 'terms' | 'shipping'>, string[]> = {
+const styleHighlights: Record<Exclude<SubpageKey, 'about' | 'distro' | 'merch' | 'contacto' | 'cart' | 'privacy' | 'terms' | 'shipping'>, string[]> = {
   thrash: ['Palm-muted riffing', 'Fast double-kick grooves', 'Sharp social lyrics'],
   death: ['Low-tuned guitars', 'Blast-beat sections', 'Morbid artwork focus'],
   black: ['Raw production aesthetics', 'Tremolo-driven melodies', 'Atmospheric intros'],
@@ -238,7 +262,7 @@ export default function SubpageContent({
   const [mobileDistroFiltersOpen, setMobileDistroFiltersOpen] = useState(false);
   const [distroFilters, setDistroFilters] = useState<CatalogFilters>(EMPTY_DISTRO_FILTERS);
   const [shippingZone, setShippingZone] = useState<1 | 2 | 3 | 4>(1);
-  const useCatalogStyleHeader = page === 'distro' || page === 'merch' || page === 'contacto';
+  const useCatalogStyleHeader = page === 'about' || page === 'distro' || page === 'merch' || page === 'contacto';
   const totalItemCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
   const cartSubtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
   const extraItemShipping = Math.floor(totalItemCount / 4) * 2;
@@ -406,6 +430,22 @@ export default function SubpageContent({
         </section>
       )}
 
+      {page === 'about' && (
+        <section className="rounded-sm border border-[#769a75]/50 bg-[#101910c7] p-6">
+          <div className="grid gap-4">
+            <p className="max-w-4xl text-sm leading-relaxed text-[#b7c8b5] sm:text-base">
+              Selvajaria Records is an independent underground metal label focused on raw intensity, physical releases, and
+              scene-first collaboration. The catalog is curated around bands and artists pushing aggressive, uncompromising
+              sounds across thrash, death, black, and heavy traditions.
+            </p>
+            <p className="max-w-4xl text-sm leading-relaxed text-[#b7c8b5] sm:text-base">
+              Built from DIY roots, the label works closely with artists on pressing, distribution, and direct support to
+              listeners worldwide.
+            </p>
+          </div>
+        </section>
+      )}
+
       {page === 'contacto' && (
         <section className="rounded-sm border border-[#769a75]/50 bg-[#101910c7] p-6">
           <p className="mb-5 text-[#b7c8b5]" style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
@@ -426,9 +466,10 @@ export default function SubpageContent({
                   return <Icon className="h-4 w-4 text-[#00C747]" />;
                 })()}
                 <div className="min-w-0">
-                  <p className="uppercase text-[#00C747]" style={{ fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.12em' }}>
+                  <p className="text-[#00C747]" style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.12em' }}>
                     {link.label}
                   </p>
+                  {link.sub && <p className="truncate text-[#769a75]">{link.sub}</p>}
                   <p className="truncate">{link.value}</p>
                 </div>
               </a>
@@ -568,7 +609,7 @@ export default function SubpageContent({
             Highlights
           </h3>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
-            {styleHighlights[page as Exclude<SubpageKey, 'distro' | 'merch' | 'contacto' | 'cart' | 'privacy' | 'terms' | 'shipping'>].map((line) => (
+            {styleHighlights[page as Exclude<SubpageKey, 'about' | 'distro' | 'merch' | 'contacto' | 'cart' | 'privacy' | 'terms' | 'shipping'>].map((line) => (
               <p
                 key={line}
                 className="rounded-sm border border-[#769a75]/40 bg-[#131e13]/70 p-4 text-[#f4fbf3]"
@@ -628,7 +669,7 @@ export default function SubpageContent({
               Contact & Rights
             </h3>
             <p className="mt-3 text-[#f4fbf3]" style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
-              You may request data access, correction, or deletion by writing to selvajariarecords@gmail.com.
+              You may request data access, correction, or deletion by writing to selvajariarecords.pt@gmail.com.
             </p>
           </article>
         </section>

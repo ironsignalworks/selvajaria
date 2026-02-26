@@ -1,4 +1,4 @@
-﻿import { Mail, Instagram, Music, Facebook, Youtube } from 'lucide-react';
+﻿import { Mail, Instagram, Music, Facebook, Youtube, Disc3, Skull } from 'lucide-react';
 import type { SubpageKey } from './SubpageContent';
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
@@ -29,7 +29,8 @@ export default function Footer({ onNavigate }: FooterProps) {
               <a href="https://www.instagram.com/selvajaria_records/" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Instagram className="h-5 w-5" /></a>
               <a href="https://www.facebook.com/selvajariarecords/" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Facebook className="h-5 w-5" /></a>
               <a href="https://www.youtube.com/@SelvajariaRecords" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Youtube className="h-5 w-5" /></a>
-              <a href="https://www.discogs.com/label/2788133-Selvajaria-Records" target="_blank" rel="noreferrer" className="hover:text-[#00C747]">Discogs</a>
+              <a href="https://www.discogs.com/label/2788133-Selvajaria-Records" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Disc3 className="h-5 w-5" /></a>
+              <a href="https://www.metal-archives.com/labels/Selvajaria_Records/58844" target="_blank" rel="noreferrer" className="hover:text-[#00C747]"><Skull className="h-5 w-5" /></a>
             </div>
           </div>
 
@@ -62,7 +63,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               />
               <button className="bg-[#00C747] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#131e13]">Join</button>
             </form>
-            <a href="mailto:selvajariarecords@gmail.com" className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-[#769a75] hover:text-[#00C747]">
+            <a href="mailto:selvajaria.orders@outlook.com" className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-[#769a75] hover:text-[#00C747]">
               <Mail className="h-4 w-4" /> Email
             </a>
           </div>
@@ -78,3 +79,6 @@ export default function Footer({ onNavigate }: FooterProps) {
     </footer>
   );
 }
+
+
+

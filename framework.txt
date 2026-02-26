@@ -1,0 +1,24 @@
+
+Extra polish moves (worth doing)
+
+Set GitHub Pages to the custom domain and keep the github.io URL as a fallback
+
+Add a canonical link and OG image on the custom domain (sharing looks pro)
+
+Set up redirects so old links never break
+
+Add these “pro” upgrades (cheap for you, valuable for them)
+
+Content model in CMS (Releases, Artists, Products)
+
+Preview workflow (even simple staging env)
+
+SEO basics (title/description per release, OG tags)
+
+Performance budget + basic monitoring (Lighthouse baseline)
+
+Deployment pipeline with previews (Netlify/Vercel previews even for static builds)
+
+Analytics events (release clicks, store clicks)
+
+

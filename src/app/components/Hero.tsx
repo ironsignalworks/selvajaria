@@ -37,11 +37,24 @@ interface HeroProps {
 
 export default function Hero({ onEnterStore, featuredReleases }: HeroProps) {
   const heroReleases = useMemo(
-    () => (featuredReleases && featuredReleases.length > 0 ? featuredReleases : defaultHeroReleases),
+    () => (featuredReleases && featuredReleases.length > 0 ? featuredReleases : defaultHeroReleases).slice(0, 5),
     [featuredReleases]
   );
   const [heroIndex, setHeroIndex] = useState(0);
   const current = heroReleases[heroIndex];
+  const { primaryLine, fansOfLine } = useMemo(() => {
+    const raw = current.line?.trim() ?? '';
+    const idx = raw.toLowerCase().indexOf('ffo:');
+    if (idx === -1) {
+      return { primaryLine: raw, fansOfLine: '' };
+    }
+    const lead = raw.slice(0, idx).replace(/[,\s]+$/, '').trim();
+    const ffo = raw.slice(idx + 4).trim();
+    return {
+      primaryLine: lead,
+      fansOfLine: ffo ? `For fans of: ${ffo}` : '',
+    };
+  }, [current.line]);
   const openCurrentRelease = () => {
     // store requested view on window in case listener isn't mounted yet
     (window as any).__requestedHeroView = { artist: current.artist, title: current.title };
@@ -140,9 +153,16 @@ export default function Hero({ onEnterStore, featuredReleases }: HeroProps) {
                 {current.artist}
                 <span className="block text-[#00C747]">{current.title}</span>
               </h2>
-              <p className="mt-2 min-h-[3.5rem] max-w-xl text-lg font-medium leading-relaxed text-[#769a75] sm:text-xl">
-                {current.line}
-              </p>
+              <div className="mt-2 min-h-[3.5rem] max-w-xl">
+                <p className="text-lg font-medium leading-relaxed text-[#769a75] sm:text-xl">
+                  {primaryLine}
+                </p>
+                {fansOfLine && (
+                  <p className="mt-1 text-base font-medium leading-relaxed text-[#9fb39f] sm:text-lg">
+                    {fansOfLine}
+                  </p>
+                )}
+              </div>
               <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:justify-start sm:gap-4">
                 <button
                   type="button"

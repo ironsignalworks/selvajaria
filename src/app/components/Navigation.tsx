@@ -59,10 +59,11 @@ export default function Navigation({
   }, []);
 
   const menuItems: MenuItem[] = [
-    { label: 'New Releases', page: 'releases' },
-    { label: 'Distribution', page: 'distro' },
-    { label: 'Merch', page: 'merch' },
-    { label: 'Contact', page: 'contacto' },
+    { label: 'LABEL RELEASES', page: 'releases' },
+    { label: 'DISTRO', page: 'distro' },
+    { label: 'MERCH', page: 'merch' },
+    { label: 'ABOUT', page: 'about' },
+    { label: 'CONTACT', page: 'contacto' },
   ];
 
   return (

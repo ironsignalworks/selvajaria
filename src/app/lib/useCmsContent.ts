@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { releases, type Release } from '../components/ReleaseGrid';
 import { distroItems, merchItems, type DistroItem, type DistroUpdate, type MerchItem } from '../components/SubpageContent';
 import type { HeroRelease } from '../components/Hero';
+import catalogSeed from '../../../docs/import/catalog-release-seed.json';
 
 interface CmsContentState {
   catalogReleases: Release[];
@@ -87,17 +88,112 @@ const withLeadingSlash = (path: string) => {
   return path.startsWith('/') ? path : `/${path}`;
 };
 
+const toHeroLine = (release: Pick<Release, 'description' | 'formats'>) => {
+  const description = release.description?.trim();
+  if (description) {
+    return description;
+  }
+  return `${release.formats[0]?.toUpperCase() ?? 'FORMAT'} OUT NOW!`;
+};
+
 const fallbackFeaturedReleases: HeroRelease[] = releases.slice(0, 3).map((release) => ({
   artist: release.artist,
   title: release.title.toUpperCase(),
   image: withLeadingSlash(release.image),
-  line: `${release.formats[0]?.toUpperCase() ?? 'FORMAT'} OUT NOW!`,
+  line: toHeroLine(release),
+}));
+
+interface SeedCatalogItem {
+  id?: string;
+  artist?: string;
+  title?: string;
+  formats?: string[];
+  price?: number;
+  image?: string;
+  genre?: string;
+  year?: number;
+  releaseDate?: string;
+  description?: string;
+  details?: string[];
+  trackHighlights?: string[];
+  listeningUrl?: string;
+  inStock?: boolean;
+  countries?: string[];
+  isLatest?: boolean;
+}
+
+const getReleaseTimestamp = (release: Release) => {
+  if (release.releaseDate) {
+    const timestamp = Date.parse(release.releaseDate);
+    if (Number.isFinite(timestamp)) {
+      return timestamp;
+    }
+  }
+  return Date.UTC(release.year, 0, 1);
+};
+
+const seededCatalogReleases: Release[] = (catalogSeed as SeedCatalogItem[])
+  .map((item, index) => {
+    const artist = item.artist?.trim();
+    const title = item.title?.trim();
+    if (!artist || !title) {
+      return null;
+    }
+    const normalizedFormats = Array.isArray(item.formats)
+      ? item.formats.filter(
+          (format): format is Release['formats'][number] =>
+            format === 'vinyl' || format === 'cd' || format === 'tape' || format === 'digital'
+        )
+      : [];
+
+    return {
+      id: item.id ?? `seed-release-${index + 1}`,
+      artist,
+      title,
+      formats: normalizedFormats.length > 0 ? normalizedFormats : ['cd'],
+      price: typeof item.price === 'number' ? item.price : 12,
+      image: withLeadingSlash(item.image ?? '/logo3.png'),
+      genre: item.genre ?? 'Unknown',
+      year: typeof item.year === 'number' ? item.year : new Date().getFullYear(),
+      releaseDate: typeof item.releaseDate === 'string' ? item.releaseDate : undefined,
+      description: item.description ?? '',
+      details: Array.isArray(item.details) ? item.details : [],
+      trackHighlights: Array.isArray(item.trackHighlights) ? item.trackHighlights : [],
+      listeningUrl: item.listeningUrl,
+      inStock: typeof item.inStock === 'boolean' ? item.inStock : true,
+      countries: Array.isArray(item.countries) ? item.countries : [],
+      isLatest: typeof item.isLatest === 'boolean' ? item.isLatest : false,
+    };
+  })
+  .filter((item): item is Release => item !== null)
+  .sort((a, b) => getReleaseTimestamp(b) - getReleaseTimestamp(a));
+
+const seededDistroItems: DistroItem[] = seededCatalogReleases.map((release) => ({
+  id: String(release.id),
+  name: release.title,
+  artist: release.artist,
+  image: release.image,
+  format: release.formats[0]?.toUpperCase() ?? 'CD',
+  price: release.price,
+  listeningUrl: release.listeningUrl,
+  genre: release.genre.toLowerCase(),
+  country: release.countries?.[0] ?? '',
+  inStock: release.inStock ?? true,
+}));
+
+const fallbackCatalogReleases = seededCatalogReleases.length > 0 ? seededCatalogReleases : releases;
+const fallbackDistroItems = seededDistroItems.length > 0 ? seededDistroItems : distroItems;
+const fallbackSeededFeaturedReleases: HeroRelease[] = fallbackCatalogReleases.slice(0, 3).map((release) => ({
+  artist: release.artist,
+  title: release.title.toUpperCase(),
+  image: withLeadingSlash(release.image),
+  line: toHeroLine(release),
 }));
 
 const fallbackState: CmsContentState = {
-  catalogReleases: releases,
-  featuredReleases: fallbackFeaturedReleases,
-  distroItems,
+  catalogReleases: fallbackCatalogReleases,
+  featuredReleases: fallbackSeededFeaturedReleases.length > 0 ? fallbackSeededFeaturedReleases : fallbackFeaturedReleases,
+  distroItems: fallbackDistroItems,
   distroUpdates: [],
   merchItems,
   cmsEnabled: false,
@@ -215,6 +311,7 @@ const mapRelease = (item: Record<string, unknown>, index: number): Release | nul
     image: withLeadingSlash(image),
     genre: readString(item, ['genre'], 'Unknown'),
     year: readNumber(item, ['year'], new Date().getFullYear()),
+    releaseDate: readString(item, ['releaseDate', 'date', 'releasedAt']),
     description: readString(item, ['description'], ''),
     details: readStringArray(item, ['details']),
     trackHighlights: readStringArray(item, ['trackHighlights', 'tracks']),
@@ -407,9 +504,14 @@ export default function useCmsContent() {
           .filter((item): item is MerchItem => item !== null);
 
         setState({
-          catalogReleases: nextCatalog.length > 0 ? nextCatalog : releases,
-          featuredReleases: nextFeatured.length > 0 ? nextFeatured : fallbackFeaturedReleases,
-          distroItems: nextDistro.length > 0 ? nextDistro : distroItems,
+          catalogReleases: nextCatalog.length > 0 ? nextCatalog : fallbackCatalogReleases,
+          featuredReleases:
+            nextFeatured.length > 0
+              ? nextFeatured
+              : fallbackSeededFeaturedReleases.length > 0
+                ? fallbackSeededFeaturedReleases
+                : fallbackFeaturedReleases,
+          distroItems: nextDistro.length > 0 ? nextDistro : fallbackDistroItems,
           distroUpdates: nextUpdates,
           merchItems: nextMerch.length > 0 ? nextMerch : merchItems,
           cmsEnabled: true,

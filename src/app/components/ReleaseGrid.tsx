@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { ImageWithFallback } from './ImageWithFallback';
 import { Disc3, Disc, CassetteTape, Download, Play } from 'lucide-react';
 import type { CartItemInput } from './SubpageContent';
@@ -13,6 +13,7 @@ export interface Release {
   image: string;
   genre: string;
   year: number;
+  releaseDate?: string;
   description: string;
   details: string[];
   trackHighlights: string[];
@@ -496,6 +497,29 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
   const [isDetailImageLarge, setIsDetailImageLarge] = useState(false);
   const [showAllReleases, setShowAllReleases] = useState(false);
   const sourceReleases = releasesData ?? releases;
+  const catalogReleases = useMemo(() => {
+    const grouped = new Map<string, Release>();
+
+    for (const release of sourceReleases) {
+      const key = `${release.artist.trim().toLowerCase()}|${release.title.trim().toLowerCase()}`;
+      const existing = grouped.get(key);
+      if (!existing) {
+        grouped.set(key, { ...release, formats: [...release.formats] });
+        continue;
+      }
+
+      const formats = Array.from(new Set([...existing.formats, ...release.formats]));
+      const countries = Array.from(new Set([...(existing.countries ?? []), ...(release.countries ?? [])]));
+      grouped.set(key, {
+        ...existing,
+        formats,
+        countries: countries.length > 0 ? countries : existing.countries,
+        inStock: (existing.inStock ?? true) || (release.inStock ?? true),
+      });
+    }
+
+    return Array.from(grouped.values());
+  }, [sourceReleases]);
   const latestReleaseId = 1;
   const closeReleaseDetails = () => {
     setDetailModalRelease(null);
@@ -518,10 +542,19 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
       image: release.image,
     });
   };
-  const sortedReleases = [...sourceReleases].sort((a, b) => {
+  const getReleaseTimestamp = (release: Release) => {
+    if (release.releaseDate) {
+      const timestamp = Date.parse(release.releaseDate);
+      if (Number.isFinite(timestamp)) {
+        return timestamp;
+      }
+    }
+    return Date.UTC(release.year, 0, 1);
+  };
+  const sortedReleases = [...catalogReleases].sort((a, b) => {
     switch (sortBy) {
       case 'oldest':
-        return a.year - b.year;
+        return getReleaseTimestamp(a) - getReleaseTimestamp(b);
       case 'price-low':
         return a.price - b.price;
       case 'price-high':
@@ -530,7 +563,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
         return a.artist.localeCompare(b.artist);
       case 'newest':
       default:
-        return b.year - a.year;
+        return getReleaseTimestamp(b) - getReleaseTimestamp(a);
     }
   });
   const normalizedSearch = searchQuery.trim().toLowerCase();
@@ -573,7 +606,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
         return;
       }
 
-      const matched = sourceReleases.find(
+      const matched = catalogReleases.find(
         (release) =>
           release.artist.toUpperCase() === artist &&
           release.title.toUpperCase() === title
@@ -591,7 +624,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
       if (!artist || !title) return;
       const a = artist.toUpperCase();
       const t = title.toUpperCase();
-      const matched = sourceReleases.find(
+      const matched = catalogReleases.find(
         (release) => release.artist.toUpperCase() === a && release.title.toUpperCase() === t
       );
       if (matched) setDetailModalRelease(matched);
@@ -603,7 +636,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
       try {
         const a = pending.artist.toUpperCase();
         const t = pending.title.toUpperCase();
-        const matched = sourceReleases.find(
+        const matched = catalogReleases.find(
           (release) => release.artist.toUpperCase() === a && release.title.toUpperCase() === t
         );
         if (matched) {
@@ -628,7 +661,7 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
         (window as any).openRelease = undefined;
       }
     };
-  }, [sourceReleases]);
+  }, [catalogReleases]);
 
   useEffect(() => {
     setShowAllReleases(false);
@@ -708,12 +741,15 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
                 <div className="mb-4 flex items-center justify-between gap-2">
                   <div className="flex flex-wrap gap-1.5">
                     {release.formats.map((format) => {
+                      const Icon = formatIcons[format];
                       return (
                         <span
                           key={format}
-                          className="inline-flex items-center border border-[#769a75]/70 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.1em] text-[#b7c8b5]"
+                          className="inline-flex h-7 w-7 items-center justify-center border border-[#769a75]/70 text-[#b7c8b5]"
+                          title={formatLabels[format]}
+                          aria-label={formatLabels[format]}
                         >
-                          {formatLabels[format]}
+                          <Icon className="h-4 w-4" />
                         </span>
                       );
                     })}
@@ -888,6 +924,9 @@ export default function ReleaseGrid({ sortBy, onAddToCart, searchQuery, filters,
     </>
   );
 }
+
+
+
 
 
 

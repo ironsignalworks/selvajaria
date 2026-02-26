@@ -48,11 +48,17 @@ export default function FilterSidebar({ value, onChange }: FilterSidebarProps) {
   ];
 
   const genres = [
+    { id: 'heavy', label: 'Heavy' },
     { id: 'thrash', label: 'Thrash' },
+    { id: 'speed', label: 'Speed' },
     { id: 'death', label: 'Death' },
     { id: 'black', label: 'Black' },
-    { id: 'heavy', label: 'Heavy' },
     { id: 'doom', label: 'Doom' },
+    { id: 'punk', label: 'Punk' },
+    { id: 'crust', label: 'Crust' },
+    { id: 'rock', label: 'Rock' },
+    { id: 'grindcore', label: 'Grindcore' },
+    { id: 'hardcore', label: 'Hardcore' },
   ];
 
   const countries = [
