@@ -125,20 +125,23 @@ export default function Hero({ onEnterStore, featuredReleases }: HeroProps) {
           <div
             id="hero-pics"
             className="relative mx-auto w-full max-w-[28rem] scroll-mt-40 sm:max-w-[30rem]"
-            style={{ boxShadow: '0 0 28px rgba(0, 199, 71, 0.28)' }}
           >
-            <div className="relative aspect-square overflow-hidden bg-transparent">
+            <div className="relative aspect-square overflow-visible bg-transparent">
+              <div className="pointer-events-none absolute -inset-6 -z-10">
+                <div className="absolute left-1/2 top-1/2 h-[62%] w-[74%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00C747]/20 blur-[34px]" />
+                <div className="absolute left-1/2 top-[56%] h-[46%] w-[56%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#5dff9e]/14 blur-[22px]" />
+              </div>
               <button
                 type="button"
                 onClick={openCurrentRelease}
-                className="block h-full w-full cursor-pointer"
+                className="flex h-full w-full cursor-pointer items-center justify-center"
                 aria-label={`View release details for ${current.artist} ${current.title}`}
               >
                 <ImageWithFallback
                   key={`hero-image-${heroIndex}`}
                   src={asset(current.image)}
                   alt={`${current.artist} cover`}
-                  className="hero-slide-in relative mx-auto h-full w-full object-contain"
+                  className="hero-slide-in relative mx-auto h-full w-full object-contain drop-shadow-[0_0_12px_rgba(0,199,71,0.35)]"
                 />
               </button>
             </div>
@@ -154,11 +157,11 @@ export default function Hero({ onEnterStore, featuredReleases }: HeroProps) {
                 <span className="block text-[#00C747]">{current.title}</span>
               </h2>
               <div className="mt-2 min-h-[3.5rem] max-w-xl">
-                <p className="text-lg font-medium leading-relaxed text-[#769a75] sm:text-xl">
+                <p className="text-lg font-semibold leading-relaxed text-[#d8f2d7] drop-shadow-[0_1px_6px_rgba(0,0,0,0.65)] sm:text-xl">
                   {primaryLine}
                 </p>
                 {fansOfLine && (
-                  <p className="mt-1 text-base font-medium leading-relaxed text-[#9fb39f] sm:text-lg">
+                  <p className="mt-1 text-base font-medium leading-relaxed text-[#f1fff1] drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)] sm:text-lg">
                     {fansOfLine}
                   </p>
                 )}
@@ -167,14 +170,14 @@ export default function Hero({ onEnterStore, featuredReleases }: HeroProps) {
                 <button
                   type="button"
                   onClick={openCurrentRelease}
-                  className="border-2 border-[#769a75] bg-[#131e13] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#f4fbf3] hover:border-[#00C747] hover:bg-[#00C747] hover:text-[#131e13]"
+                  className="border-2 border-[#00C747]/80 bg-[#101910]/95 px-6 py-3 font-display text-[12px] font-bold uppercase tracking-[0.12em] text-[#f4fbf3] shadow-[0_0_0_1px_rgba(0,0,0,0.25)] hover:border-[#9dffbe] hover:bg-[#00C747] hover:text-[#131e13]"
                 >
                   View Release
                 </button>
                 <button
                   type="button"
                   onClick={onEnterStore}
-                  className="border-2 border-[#00C747] px-6 py-3 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-[#00C747] hover:bg-[#00C747] hover:text-[#131e13]"
+                  className="border-2 border-[#00C747] bg-[#00C747] px-6 py-3 font-display text-[12px] font-bold uppercase tracking-[0.12em] text-[#051106] shadow-[0_0_0_1px_rgba(0,0,0,0.25)] hover:border-[#9dffbe] hover:bg-[#9dffbe]"
                 >
                   Enter Store
                 </button>
